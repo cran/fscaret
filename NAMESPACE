@@ -1,0 +1,12 @@
+exportPattern("^[[:alpha:]]+")
+import(parallel, gsubfn, caret, multicore)
+export(dataPreprocess,
+	fscaret,
+	funcRegPred,
+	impCalc,
+	installPckg,
+	MSE,
+	regVarImp,
+	requiredPackages,
+	RMSE,
+	timeout)
