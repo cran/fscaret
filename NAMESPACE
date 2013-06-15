@@ -1,5 +1,5 @@
 exportPattern("^[[:alpha:]]+")
-import(parallel, gsubfn, caret, multicore)
+import(parallel, gsubfn, caret)
 export(dataPreprocess,
 	fscaret,
 	funcRegPred,

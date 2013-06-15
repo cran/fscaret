@@ -9,7 +9,7 @@ The function uses the caret package advantage to perform fitting of numerous reg
 \usage{
 regVarImp(model, xTrain, yTrain, xTest,
 	  fitControl, myTimeLimit, no.cores,
-	  lk_col, supress.output)
+	  lk_col, supress.output, mySystem)
 }
 \arguments{
   \item{model}{
@@ -38,6 +38,9 @@ Number of columns for whole data set (inputs + output)
 }
   \item{supress.output}{
 If TRUE output of models are supressed.
+}
+  \item{mySystem}{
+Called from fscaret() result of function .Platform$OS.type
 }
 }
 \references{
@@ -70,6 +73,11 @@ myTimeLimit <- 5
 no.cores <- 2
 supress.output <- TRUE
 
+mySystem <- .Platform$OS.type
+
+if(mySystem=="windows"){
+no.cores <- 1
+}
 # Scan dimensions of trainDF [lk_row x lk_col]
 lk_col = ncol(trainDF)
 lk_row = nrow(trainDF)
@@ -116,7 +124,7 @@ yTest <- as.vector(testMatryca_nr[,lk_col])
 
 myVarImp <- regVarImp(model, xTrain, yTrain, xTest,
 	    fitControl, myTimeLimit, no.cores, lk_col,
-	    supress.output)
+	    supress.output, mySystem)
 
 summary(myVarImp)
 

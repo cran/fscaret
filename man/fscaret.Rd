@@ -96,12 +96,24 @@ data(dataset.test)
 
 requiredPackages <- c("R.utils", "gsubfn", "ipred", "caret", "multicore", "parallel", "MASS")
 
+mySystem <- .Platform$OS.type
+
+if(mySystem=="windows"){
+
+myCores <- 1
+
+} else {
+
+myCores <- 2
+
+}
+
 myFirstRES <- fscaret(dataset.train, dataset.test, installReqPckg=FALSE,
                   preprocessData=FALSE, with.labels=TRUE, classPred=FALSE,
                   regPred=TRUE, skel_outfile=NULL,
                   impCalcMet="RMSE&MSE", myTimeLimit=5,
                   Used.funcRegPred=c("lm","pls","pcr"), Used.funcClassPred=NULL,
-                  no.cores=2, method="boot", returnResamp="all",
+                  no.cores=myCores, method="boot", returnResamp="all",
                   supress.output=TRUE)
 
 # Training data set after preprocessing

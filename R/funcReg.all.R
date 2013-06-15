@@ -1,5 +1,5 @@
 #  All functions are used for regression problems
- funcRegPred <- c("glm", "glmStepAIC","gam","gamLoess","gamSpline","rpart","rpart2","ctree","ctree2","evtree","obliqueTree",
+ funcRegPred <- c("glm", "glmStepAIC","gam","rpart","rpart2","ctree","ctree2","evtree","obliqueTree",
 "gbm", "blackboost","bstTree","glmboost","gamboost","bstLs","bstSm","rf","parRF","cforest","Boruta","RRFglobal","RRF",
 "treebag","bag","logicBag","bagEarth","nodeHarvest","partDSA","earth","gcvEarth","logreg","glmnet", "nnet","mlp","mlpWeightDecay",
 "pcaNNet", "avNNet","rbf","pls","kernelpls","simpls","widekernelpls","spls", "svmLinear", "svmRadial", "svmRadialCost", "svmPoly",

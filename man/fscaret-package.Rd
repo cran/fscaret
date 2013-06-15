@@ -9,13 +9,14 @@ This package provide fast and automated feature selection based on caret package
 The main advantage of this extension is that it requires minimum user involvement.
 Also the variety of used methods in combination with the scaling according to RMSE or MSE obtained from models profit the user.
 The idea is based on the assumption that the variety of models will balance the roughness of calculations (default model settings are applied).
+On Windows OS the time limiting function is off also the number of cores used is set to 1.
 }
 \details{
 \tabular{ll}{
 Package: \tab fscaret\cr
 Type: \tab Package\cr
-Version: \tab 0.8.4\cr
-Date: \tab 2013-06-13\cr
+Version: \tab 0.8.5.1\cr
+Date: \tab 2013-06-15\cr
 License: \tab GPL-2 | GPL-3\cr
 }
 }

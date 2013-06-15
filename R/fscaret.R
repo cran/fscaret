@@ -7,6 +7,7 @@ fscaret<-function(trainDF, testDF, installReqPckg=FALSE,
 		  missData=NULL, supress.output=FALSE, ... ){
 
 
+mySystem <- .Platform$OS.type
 regPredRES <- list()
 impCalcRES <- list()
 fscaretRES <- list()
@@ -101,14 +102,19 @@ if(is.null(skel_outfile)){
   
 }
 
-# Check the number of selected cores - if NULL use all available
+# Check the number of selected cores - if NULL use all available or set no.cores=1 on Windows
 
-if(is.null(no.cores)){
+if(mySystem!="windows"){
+  
+  if(is.null(no.cores)){
+    no.cores<-detectCores()
+  }
+  
+} else {
 
-no.cores<-detectCores()
+no.cores <- 1
 
 }
-
 # Scan dimensions of trainDF [lk_row x lk_col]
 lk_col = ncol(trainDF)
 lk_row = nrow(trainDF)
@@ -146,7 +152,7 @@ for(col in 1:(lk_col_test)) {
 
 # Check for missing data
 if(!is.null(missData)){
-if(missData=="delRow"){
+  if(missData=="delRow"){
 
 # record rows with missing values
 missing.rowsTrain <- which(rowSums(is.na(trainMatryca_nr))>0)
@@ -176,11 +182,10 @@ cat("\n","Warning!","\n" ,"Rows:","\n")
 print(as.data.frame(missing.rowsTest))
 cat("\n", " from testing data set were deleted because of missing values.","\n")
 
-}
+    }
+  } 
 
-} 
-
-if(missData=="delCol"){
+  if(missData=="delCol"){
 
 tmpMatrix <- rbind(trainMatryca_nr, testMatryca_nr)
 
@@ -202,11 +207,10 @@ cat("\n","Warning!","\n" ,"Cols:","\n")
 print(as.data.frame(missing.colsTmpMatrix))
 cat("\n", " from training and testing data set were deleted because of missing values.","\n")
 
-}
+    }
+  }
 
-}
-
-if(missData=="meanCol"){
+  if(missData=="meanCol"){
 
 # Bind matricies
 tmpMatrix <- rbind(trainMatryca_nr, testMatryca_nr)
@@ -234,7 +238,6 @@ trainMatryca_nr <- tmpMatrix[1:(lk_row),]
 testMatryca_nr <- tmpMatrix[(lk_row+1):(nrow(tmpMatrix)),]
 
     }
-
   }
 }
 
@@ -278,8 +281,6 @@ for(col in 1:(lk_col_test)) {
 
 labelsFrame <- preprocessRes$labelsDF
 
-
-
 }
 
 
@@ -297,7 +298,8 @@ yTrain <- as.vector(trainMatryca_nr[,lk_col])
 xTest <- data.frame(testMatryca_nr[,-lk_col])
 yTest <- as.vector(testMatryca_nr[,lk_col])
 
-regPredRES <- regVarImp(definedModels, xTrain, yTrain, xTest, fitControl, myTimeLimit, no.cores, lk_col, supress.output)
+regPredRES <- regVarImp(definedModels, xTrain, yTrain, xTest, fitControl,
+			myTimeLimit, no.cores, lk_col, supress.output, mySystem)
 
 
 }

@@ -54,6 +54,11 @@ myTimeLimit <- 5
 no.cores <- 2
 supress.output <- TRUE
 skel_outfile <- paste("_default_",sep="")
+mySystem <- .Platform$OS.type
+
+if(mySystem=="windows"){
+no.cores <- 1
+}
 
 # Scan dimensions of trainDF [lk_row x lk_col]
 lk_col = ncol(trainDF)
@@ -102,7 +107,7 @@ yTest <- as.vector(testMatryca_nr[,lk_col])
 # Calling lower function to create models to calculate on
 myVarImp <- regVarImp(model, xTrain, yTrain, xTest,
 	    fitControl, myTimeLimit, no.cores, lk_col,
-	    supress.output)
+	    supress.output, mySystem)
 
 
 myImpCalc <- impCalc(skel_outfile, xTest, yTest, lk_col)

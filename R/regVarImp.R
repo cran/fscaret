@@ -1,4 +1,4 @@
-regVarImp <- function(model, xTrain, yTrain, xTest, fitControl, myTimeLimit, no.cores, lk_col, supress.output){
+regVarImp <- function(model, xTrain, yTrain, xTest, fitControl, myTimeLimit, no.cores, lk_col, supress.output, mySystem){
 
 resultVarImpListCombREG <- NULL
 resultVarImpListCombREG <- list()
@@ -7,6 +7,7 @@ myTimeLimitSet <- myTimeLimit
 fitControlSet <- fitControl
 lk_col <- lk_col
 supress.output <- supress.output
+mySystem <- mySystem
 
 
 
@@ -26,16 +27,34 @@ outfileImp<-paste("./",(lk_col-1),"in_default_REGControl_VarImp_", paste(funcReg
 #start feature selection method
 timer1 <- proc.time()
 
-if(supress.output==TRUE){
+if(mySystem!="windows"){
+  if(supress.output==TRUE){
 
-# Supress output
-sink("/dev/null")
-res <- invisible(try(timeout(train(xTrain,yTrain, method=funcRegPred, trControl=fitControlSet),seconds=myTimeLimitSet,my.pid=Sys.getpid()),silent=TRUE))
-sink()
+    # Supress output
+    sink("/dev/null")
+    res <- invisible(try(timeout(train(xTrain,yTrain, method=funcRegPred, trControl=fitControlSet),seconds=myTimeLimitSet,my.pid=Sys.getpid()),silent=TRUE))
+    sink()
 
+    } else {
+
+    res <- try(timeout(train(xTrain,yTrain, method=funcRegPred, trControl=fitControlSet),seconds=myTimeLimitSet,my.pid=Sys.getpid()),silent=TRUE)
+
+    }
+    
 } else {
 
-res <- try(timeout(train(xTrain,yTrain, method=funcRegPred, trControl=fitControlSet),seconds=myTimeLimitSet,my.pid=Sys.getpid()),silent=TRUE)
+    if(supress.output==TRUE){
+
+    # Supress output
+    sink("NUL")
+    res <- try(train(xTrain,yTrain, method=funcRegPred, trControl=fitControlSet),silent=TRUE)
+    sink()
+
+    } else {
+
+    res <- try(train(xTrain,yTrain, method=funcRegPred, trControl=fitControlSet),silent=TRUE)
+
+    }
 
 }
 
@@ -118,74 +137,3 @@ resultVarImpListCombREG[model] <- mclapply(model,regVarPred, mc.preschedule=FALS
 return(resultVarImpListCombREG)
 
 }
-
-# # test function
-# 
-# model <- c("rf", "rpart", "lm")
-# myTimeLimit<-60
-# method <- c("boot")
-# returnResamp <- c("all")
-# no.cores<-2
-# 
-# 
-# skel_plik <- "MPS_PLGA_298in_base_with_labels" # Training data - it will give (xTrain and yTrain)
-# skel_plik1 <- "MPS_PLGA_298in_base_with_labels" # Testing data - it will give (xTest and yTest)
-# skel_outfile<-paste("./",skel_plik,"_caretPckg_",sep="")
-# 
-# plik <- paste(skel_plik,".txt",sep="")
-# plik1 <- paste(skel_plik1,".txt",sep="")
-# 
-# trainDataFrame1 <- read.csv(plik,header=TRUE,sep="\t", strip.white = TRUE, na.strings = c("NA",""))
-# testDataFrame1 <- read.csv(plik1,header=TRUE,sep="\t", strip.white = TRUE, na.strings = c("NA",""))
-# 
-# with.labels=TRUE
-# 
-# 
-# #--------Scan dimensions of trainDataFrame1 [lk_row x lk_col]
-# lk_col = ncol(trainDataFrame1)
-# lk_row = nrow(trainDataFrame1)
-# 
-# #--------Read labels of trainDataFrame1
-# labelsFrameTest <- as.data.frame(colnames(trainDataFrame1))
-# 
-# trainMatryca_nr <- matrix(data=NA,nrow=lk_row,ncol=lk_col)
-# trainMatryca_nr_backup<- matrix(data=NA,nrow=lk_row,ncol=lk_col)
-# 
-# row=0
-# col=0
-# 
-# for(col in 1:(lk_col)) {
-#    for(row in 1:(lk_row)) {
-#      trainMatryca_nr[row,col] <- (as.numeric(trainDataFrame1[row,col]))
-#     }
-# }
-# 
-# 
-# #--------Scan dimensions of trainDataFrame1 [lk_row x lk_col]
-# lk_col_test = ncol(testDataFrame1)
-# lk_row_test = nrow(testDataFrame1)
-# 
-# testMatryca_nr <- matrix(data=NA,nrow=lk_row,ncol=lk_col)
-# 
-# row=0
-# col=0
-# 
-# for(col in 1:(lk_col_test)) {
-#    for(row in 1:(lk_row_test)) {
-#      testMatryca_nr[row,col] <- (as.numeric(testDataFrame1[row,col]))
-#     }
-# }
-# 
-# 
-# labelsFrameTest <- as.data.frame(colnames(trainDataFrame1))
-# 
-# fitControl <- trainControl(method = method, returnResamp = returnResamp)
-# 
-# # definition of input and output vector
-# xTrain <- data.frame(trainMatryca_nr[,-lk_col])
-# yTrain <- as.vector(trainMatryca_nr[,lk_col])
-# 
-# xTest <- data.frame(testMatryca_nr[,-lk_col])
-# yTest <- as.vector(testMatryca_nr[,lk_col])
-# 
-# testRegVarImpRES <- regVarImp(model, xTrain, yTrain, fitControl, myTimeLimit, lk_col)

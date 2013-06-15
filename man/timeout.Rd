@@ -5,6 +5,7 @@ timeout
 }
 \description{
 This function limits the cpu time spent on single model fitting. It simply sets the killing process of itself to sleep for chosen number of seconds. Shouldn't be called from R console.
+The function is not used under Windows OS.
 }
 \usage{
 timeout(expr, seconds, my.pid)
