@@ -1,1 +1,1 @@
-requiredPackages <- c("R.utils", "gsubfn", "multicore", "parallel", "MASS")
+requiredPackages <- c("caret", "R.utils", "gsubfn", "parallel", "MASS")

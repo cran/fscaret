@@ -1,0 +1,291 @@
+% \VignetteIndexEntry{ A short fscaret package introduction with examples }
+% \VignetteDepends{fscaret}
+% \VignettePackage{fscaret}
+\documentclass[a4,12pt]{article}
+\usepackage{amsmath}
+\usepackage[pdftex]{graphicx}
+\usepackage{color}
+\usepackage{xspace}
+\usepackage{fancyvrb}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage[
+         colorlinks=true,
+         linkcolor=blue,
+         citecolor=blue,
+         urlcolor=blue]
+         {hyperref}
+\usepackage{Sweave}           
+\SweaveOpts{keep.source=TRUE}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% define new colors for use
+\definecolor{darkgreen}{rgb}{0,0.6,0}
+\definecolor{darkred}{rgb}{0.6,0.0,0}
+\definecolor{lightbrown}{rgb}{1,0.9,0.8}
+\definecolor{brown}{rgb}{0.6,0.3,0.3}
+\definecolor{darkblue}{rgb}{0,0,0.8}
+\definecolor{darkmagenta}{rgb}{0.5,0,0.5}
+
+\newcommand{\code}[1]{\mbox{\footnotesize\color{darkblue}\texttt\textsl{#1}}}
+\newcommand{\pkg}[1]{{\fontseries{b}\selectfont #1}}
+\renewcommand{\pkg}[1]{{\textsf{#1}}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\DefineVerbatimEnvironment{Sinput}{Verbatim}{fontshape=sl,formatcom=\color{darkblue}}
+\fvset{listparameters={\setlength{\topsep}{0pt}}}
+\renewenvironment{Schunk}{\vspace{\topsep}}{\vspace{\topsep}}
+
+\fvset{fontsize=\footnotesize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\bld}[1]{\mbox{\boldmath $#1$}}
+\newcommand{\shell}[1]{\mbox{$#1$}}
+\renewcommand{\vec}[1]{\mbox{\bf {#1}}}
+
+\newcommand{\ReallySmallSpacing}{\renewcommand{\baselinestretch}{.6}\Large\normalsize}
+\newcommand{\SmallSpacing}{\renewcommand{\baselinestretch}{1.1}\Large\normalsize}
+
+\newcommand{\halfs}{\frac{1}{2}}
+
+\setlength{\oddsidemargin}{-.25 truein}
+\setlength{\evensidemargin}{0truein}
+\setlength{\topmargin}{-0.2truein}
+\setlength{\textwidth}{7 truein}
+\setlength{\textheight}{8.5 truein}
+\setlength{\parindent}{0.20truein}
+\setlength{\parskip}{0.10truein}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\pagestyle{fancy}
+\lhead{}
+\chead{A short \pkg{fscaret} package introduction with examples}
+\rhead{}	
+\lfoot{}
+\cfoot{}
+\rfoot{\thepage\ of \pageref{LastPage}}
+\renewcommand{\headrulewidth}{1pt}
+\renewcommand{\footrulewidth}{1pt}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\title{A short \pkg{fscaret} package introduction with examples}
+\author{Jakub Szlek (j.szlek@uj.edu.pl)}
+
+\begin{document}
+
+\maketitle
+
+\thispagestyle{empty}
+	
+\section{ Installation }
+
+As it is in case of \pkg{caret}, the \pkg{fscaret} uses large number of R packages
+but it loads them when needed. To fully take advantage of the package it is 
+recommended to install it both with dependent and suggested packages.
+Install \pkg{fscaret} with the command
+
+<<install, eval = FALSE>>=
+install.packages("fscaret", dependencies = c("Depends", "Suggests"))
+@
+
+from R console.
+
+\section{ Overview }
+
+In general \pkg{fscaret} is a wrapper module. It uses the engine of \pkg{caret} to build models and to get the variable ranking from them.
+When models are build package tries to draw variable importance from them also getting the generalization error (RMSE and MSE) which is used during
+the scaling process. Finally the output is produced. It contains the data frame of variable importance, generalization error for all build models and
+preprocessed data set if the \code{preprocessData = TRUE} when calling the main \code{fscaret()} function.\\
+\\In summary the whole feature ranking process can be divided into:
+\begin{enumerate}
+\item User provides input data sets and a few settings
+\item Models are build
+\item Variable rankings are draw out of the models
+\item Generalization error is calculated for each model
+\item Variable rankings are scaled according to generalization error
+\item The results are gathered in tables
+\end{enumerate}
+
+\section{ Input }
+
+\subsection{ Data set format }
+Be advised that \pkg{fscaret} assumes that data sets are in MISO format (multiple input single output). The example of such (with header) is:
+
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+Input\_no1 & Input\_no2 & Input\_no3 & \ldots & Output \\
+\hline
+2 & 5.1 & 32.06 & \ldots & 1.02 \\
+\hline
+5 & 1.21 & 2.06 & \ldots & 7.2 \\
+\hline
+\end{tabular}
+
+For more information on reading files in R, please write \code{?read.csv} in R console.
+
+\subsection{An example}
+\label{firstEx}
+There are planty of methods to introduce data sets into R. The best way is to read file (presumably csv with \texttt{tab} as column separator) as follows:
+
+
+\begin{enumerate}
+
+\item Select file name
+<<load_data, eval = FALSE>>=
+basename_file <- "My_database"
+file_name <- paste(basename_file,".csv",sep="")
+@
+
+\item Read data file into matrix
+<<load_data, eval = FALSE>>=
+matrixTrain <- read.csv(file_name,header=TRUE,sep="\t",
+		strip.white = TRUE, na.strings = c("NA",""))
+@
+
+\item Put loaded matrix into \code{data.frame}
+<<load_data, eval = FALSE>>=
+matrixTrain <- as.data.frame(matrixTrain)
+@
+\end{enumerate}
+
+Be advised to use \code{header=TRUE} when you have data set with column names as first row and \code{header=FALSE} when there are no column names.
+The last step is obligatory to introduce data into \pkg{fscaret} functions as it checks if the data presented is in \code{data.frame} format.
+
+\section{ Function \code{fscaret()}}
+\subsection{Settings}
+All the settings are documented in \texttt{Reference manual} of \pkg{fscaret} \url{http://cran.r-project.org/web/packages/fscaret/fscaret.pdf}. Here we will concentrate only
+on a few valuable ones.
+\begin{itemize}
+  \item \code{installReqPckg}
+The default setting is \code{FALSE}, but if set to \code{TRUE} prior to calculations it installs all packages from the sections ''Depends'' and ''Suggests'' of
+\textsc{DESCRIPTION}. Please be advised to be logged as root (admin) if you want to install packages for all users.
+
+\item \code{preprocessData}
+The default setting is \code{FALSE}, but if set to \code{TRUE} prior to calculations it performs the data preprocessing, which in short is realized in two steps:
+    \begin{enumerate}
+      \item Check for near zero variance predictors and flag as near zero if:
+	\begin{itemize}
+	  \item the percentage of unique values is less than 20% and
+	  \item the ratio of the most frequent to the second most frequent value is greater than 20,
+	  \end{itemize}
+      \item Check for susceptibility to multicollinearity
+	\begin{itemize}
+	  \item Calculate correlation matrix
+	  \item Find variables with correlation 0.9 or more and delete them
+	 \end{itemize}
+    \end{enumerate}
+\item \code{regPred} Default option is \code{TRUE} and so the regression models are applied
+\item \code{myTimeLimit} Time limit in seconds for single model development, be advised that some models need as time to be build, if the option
+			  is omitted, the standard 24-hours time limit is applied. This function is off on non-Unix like systems.
+\item \code{Used.funcRegPred} Vector of regression models to be used, for all available models please enter \code{Used.funcRegPred="all"}, the listing of functions is:
+<<funcRegPred_all>>=
+library(fscaret)
+data(funcRegPred)
+funcRegPred
+@
+
+\item \code{no.cores} The default setting is \code{NULL} as to maximize the CPU utilization and to use all available cores. This option is off for Windows OS.
+\item \code{missData} This option handles the missing data. Possible values are:
+    \begin{itemize}
+    \item \code{missData="delRow"} - for deletion of observations (rows) with missing values,
+    \item \code{missData="delCol"} - for deletion of attributes (columns) with missing values,
+    \item \code{missData="meanCol"} - for imputing mean to missing values,
+    \item \code{missData=NULL} - no action is taken.
+    \end{itemize}
+\item \code{supress.output} Default option is \code{FALSE}, but it is sometimes justifed to supress the output of intermediate functions and focus on ranking predictions.
+\end{itemize}
+
+\subsection{An example}
+A simple example utilizing the data provided in the \pkg{fscaret}:
+
+<<fscaret_example, eval = FALSE>>=
+library(fscaret)
+data(dataset.train)
+data(dataset.test)
+
+trainDF <- dataset.train
+testDF <- dataset.test
+
+myFS<-fscaret(trainDF, testDF, myTimeLimit = 15, preprocessData=TRUE,
+	      Used.funcRegPred=c("rf","pcr","pls"), with.labels=TRUE,
+	      supress.output=TRUE)
+myRES_tab <- myFS$VarImp$matrixVarImp.MSE[1:10,c(1,2,3,5,6,7)]
+myRES_rawMSE <- myFS$VarImp$rawMSE
+myRES_PPlabels <- myFS$PPlabels
+@
+
+
+<<fscaret_example, echo = FALSE, results = hide>>=
+library(fscaret)
+data(dataset.train)
+data(dataset.test)
+
+trainDF <- dataset.train
+testDF <- dataset.test
+
+myFS<-fscaret(trainDF, testDF, myTimeLimit = 15, preprocessData=TRUE,
+	      Used.funcRegPred=c("rf","pcr","pls"), with.labels=TRUE,
+	      supress.output=TRUE)
+myRES_tab <- myFS$VarImp$matrixVarImp.MSE[1:10,c(1,2,3,5,6,7)]
+myRES_rawMSE <- myFS$VarImp$rawMSE
+myRES_PPlabels <- myFS$PPlabels
+@
+
+\section{Output}
+
+As it was stated previously there are three lists of outputs.
+\begin{enumerate}
+\item Feature ranking and generalization errors for models:
+
+<<fscaret_example>>=
+# Print out the Variable importance results for MSE scaling
+print(myRES_tab)
+@
+
+\item Raw generalization errors for each model
+<<fscaret_example>>=
+# Print out the generalization error for models
+print(myRES_rawMSE)
+@
+
+<<fscaret_example>>=
+# Print out the reduced number of inputs after preprocessing
+print(myRES_PPlabels)
+@
+\end{enumerate}
+
+As one can see in the example there were only three models used \code{"rf","pcr","pls"}, to use all available models please set option \code{Used.funcRegPred="all"}.
+The results can be presented on a bar plot (see Figure \ref{F:barPlot}). Then the arbitrary feature reduction can be applied.
+
+
+\begin{figure}
+  \begin{center}  
+<<barPlot, echo = FALSE, results = hide, fig = TRUE, width = 8, height = 4.25>>=
+
+# Present variable importance on barplot
+a=0.9
+b=0.7
+c=2
+
+lk_row.mse=nrow(myFS$VarImp$matrixVarImp.MSE)
+
+setEPS()
+
+barplot1 <- barplot(myFS$VarImp$matrixVarImp.MSE$SUM[1:(a*lk_row.mse)],
+	    cex.names=b, las = c, xlab="Variables", ylab="Importance Sum",
+	    names.arg=c(rownames(myFS$VarImp$matrixVarImp.MSE)[1:(a*lk_row.mse)]))
+	    
+lines(x = barplot1, y = myFS$VarImp$matrixVarImp.MSE$SUM[1:(a*lk_row.mse)])
+points(x = barplot1, y = myFS$VarImp$matrixVarImp.MSE$SUM[1:(a*lk_row.mse)])
+@
+
+    \caption{A sum of feature ranking of models trained and tested on \code{dataset.train}, three models were used \code{"rf","pcr","pls"}. }
+    \label{F:barPlot}         
+  \end{center}
+\end{figure}
+
+
+
+\end{document}

@@ -15,13 +15,13 @@ On Windows OS the time limiting function is off also the number of cores used is
 \tabular{ll}{
 Package: \tab fscaret\cr
 Type: \tab Package\cr
-Version: \tab 0.8.5.1\cr
-Date: \tab 2013-06-15\cr
+Version: \tab 0.8.5.2\cr
+Date: \tab 2013-06-23\cr
 License: \tab GPL-2 | GPL-3\cr
 }
 }
 \author{
-Jakub Szlek <j.szlek@uj.edu.pl>, acknowledgments to Aleksander Mendyk, contribution to stackoverflow and r-help@r-project.org mailing list community.
+Jakub Szlek <j.szlek@uj.edu.pl>, acknowledgments to Aleksander Mendyk, contributions from stackoverflow and r-help@r-project.org mailing list community.
 
 Maintainer: Jakub Szlek <j.szlek@uj.edu.pl>.
 }

@@ -35,10 +35,20 @@ print(filesRData[i])
 print("")
 
 nameTmp <- filesRDataCols[i] 
-predTmp <- predict(res, xTest)
+predTmp <- try(predict(res, xTest),silent=TRUE)
+
+if(class(predTmp)!="try-error"){
 
 impCalcScaleRMSE[[i]]<-RMSE(predTmp, yTest, length(yTest))
 impCalcScaleMSE[[i]]<-MSE(predTmp, yTest, length(yTest))
+
+} else {
+
+impCalcScaleRMSE[[i]] <- NA
+impCalcScaleMSE[[i]] <- NA
+
+}
+
 
 names(impCalcScaleRMSE)[[i]] <- nameTmp
 names(impCalcScaleMSE)[[i]] <- nameTmp
@@ -48,8 +58,11 @@ names(impCalcScaleMSE)[[i]] <- nameTmp
 impCalcScaleRMSE <- as.data.frame(impCalcScaleRMSE)
 impCalcScaleMSE <- as.data.frame(impCalcScaleMSE)
 
-impCalcScaleRMSE[is.na(impCalcScaleRMSE)]<-100000
-impCalcScaleMSE[is.na(impCalcScaleMSE)]<-100000
+maxRmse <- max(impCalcScaleRMSE, na.rm=TRUE)
+maxMse <- max(impCalcScaleMSE, na.rm=TRUE)
+
+impCalcScaleRMSE[is.na(impCalcScaleRMSE)]<-100000*maxRmse
+impCalcScaleMSE[is.na(impCalcScaleMSE)]<-100000*maxMse
 
 rawRMSE <- as.data.frame(impCalcScaleRMSE)
 rawMSE <- as.data.frame(impCalcScaleMSE)
@@ -195,69 +208,3 @@ impCalcRes <- list("rawMSE"=rawMSE, "rawRMSE"=rawRMSE, "matrixVarImp.RMSE"=matry
 return(impCalcRes)
 
 }
-
-# # test function
-# 
-# skel_plik <- "MPS_PLGA_298in_base_with_labels" # Training data - it will give (xTrain and yTrain)
-# skel_plik1 <- "MPS_PLGA_298in_base_with_labels" # Testing data - it will give (xTest and yTest)
-# skel_outfile<-paste("./",skel_plik,"_caretPckg_",sep="")
-# 
-# plik <- paste(skel_plik,".txt",sep="")
-# plik1 <- paste(skel_plik1,".txt",sep="")
-# 
-# trainDataFrame1 <- read.csv(plik,header=TRUE,sep="\t", strip.white = TRUE, na.strings = c("NA",""))
-# testDataFrame1 <- read.csv(plik1,header=TRUE,sep="\t", strip.white = TRUE, na.strings = c("NA",""))
-# 
-# with.labels=TRUE
-# 
-# 
-# #--------Scan dimensions of trainDataFrame1 [lk_row x lk_col]
-# lk_col = ncol(trainDataFrame1)
-# lk_row = nrow(trainDataFrame1)
-# 
-# #--------Read labels of trainDataFrame1
-# labelsFrameTest <- as.data.frame(colnames(trainDataFrame1))
-# 
-# trainMatryca_nr <- matrix(data=NA,nrow=lk_row,ncol=lk_col)
-# trainMatryca_nr_backup<- matrix(data=NA,nrow=lk_row,ncol=lk_col)
-# 
-# row=0
-# col=0
-# 
-# for(col in 1:(lk_col)) {
-#    for(row in 1:(lk_row)) {
-#      trainMatryca_nr[row,col] <- (as.numeric(trainDataFrame1[row,col]))
-#     }
-# }
-# 
-# 
-# #--------Scan dimensions of trainDataFrame1 [lk_row x lk_col]
-# lk_col_test = ncol(testDataFrame1)
-# lk_row_test = nrow(testDataFrame1)
-# 
-# testMatryca_nr <- matrix(data=NA,nrow=lk_row,ncol=lk_col)
-# 
-# row=0
-# col=0
-# 
-# for(col in 1:(lk_col_test)) {
-#    for(row in 1:(lk_row_test)) {
-#      testMatryca_nr[row,col] <- (as.numeric(testDataFrame1[row,col]))
-#     }
-# }
-# 
-# 
-# labelsFrameTest <- as.data.frame(colnames(trainDataFrame1))
-# 
-# # definition of input and output vector
-# xTrain <- data.frame(trainMatryca_nr[,-lk_col])
-# yTrain <- as.vector(trainMatryca_nr[,lk_col])
-# 
-# xTest <- data.frame(testMatryca_nr[,-lk_col])
-# yTest <- as.vector(testMatryca_nr[,lk_col])
-# 
-# myRES <- impCalc(skel_outfile, xTest, yTest, lk_col)
-# 
-# 
-# # end of test
-

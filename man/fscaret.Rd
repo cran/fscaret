@@ -94,7 +94,7 @@ library(fscaret)
 data(dataset.train)
 data(dataset.test)
 
-requiredPackages <- c("R.utils", "gsubfn", "ipred", "caret", "multicore", "parallel", "MASS")
+requiredPackages <- c("R.utils", "gsubfn", "ipred", "caret", "parallel", "MASS")
 
 mySystem <- .Platform$OS.type
 

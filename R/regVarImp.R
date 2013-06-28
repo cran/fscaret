@@ -117,7 +117,7 @@ try(print(variableImportanceRes),silent=TRUE)
 } else {
 
 print("Predicting variable importance has failed!")
-resultVarImpListCombREG[funcRegPred] <- try(list(cat("Predicting variable importance has failed!")),silent=TRUE)
+resultVarImpListCombREG[funcRegPred] <- try(list(NA),silent=TRUE)
 
 }
 
@@ -126,7 +126,7 @@ resultVarImpListCombREG[funcRegPred] <- try(list(cat("Predicting variable import
 } else {
  
 print("Building model has failed or reached timelimit!")
-resultVarImpListCombREG[funcRegPred] <- try(list(cat("Building model has failed or reached timelimit!")),silent=TRUE)
+resultVarImpListCombREG[funcRegPred] <- try(list(NA),silent=TRUE)
 
 }
 
