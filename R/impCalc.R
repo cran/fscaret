@@ -34,10 +34,20 @@ print("Calculating error for model:")
 print(filesRData[i])
 print("")
 
-nameTmp <- filesRDataCols[i] 
+nameTmp <- filesRDataCols[i]
+
 predTmp <- try(predict(res, xTest),silent=TRUE)
 
 if(class(predTmp)!="try-error"){
+
+if(is.factor(predTmp)==TRUE){
+
+predTmp <- as.character(predTmp)
+predTmp <- gsubfn(",",".",predTmp)
+Sys.setlocale(category = "LC_NUMERIC", locale = "C")
+predTmp <- as.numeric(predTmp)
+
+}
 
 impCalcScaleRMSE[[i]]<-RMSE(predTmp, yTest, length(yTest))
 impCalcScaleMSE[[i]]<-MSE(predTmp, yTest, length(yTest))
@@ -49,17 +59,28 @@ impCalcScaleMSE[[i]] <- NA
 
 }
 
-
 names(impCalcScaleRMSE)[[i]] <- nameTmp
 names(impCalcScaleMSE)[[i]] <- nameTmp
 
 }
 
+# Set local settings back to "normal", because loading RWeka changes locale settings
+Sys.setlocale(category = "LC_NUMERIC", locale = "C")
+
 impCalcScaleRMSE <- as.data.frame(impCalcScaleRMSE)
 impCalcScaleMSE <- as.data.frame(impCalcScaleMSE)
 
-maxRmse <- max(impCalcScaleRMSE, na.rm=TRUE)
-maxMse <- max(impCalcScaleMSE, na.rm=TRUE)
+maxRmse <- try(max(impCalcScaleRMSE, na.rm=TRUE),silent=TRUE)
+
+if(class(maxRmse)=="try-error"){
+maxRmse <- 100000
+}
+
+maxMse <- try(max(impCalcScaleMSE, na.rm=TRUE),silent=TRUE)
+
+if(class(maxMse)=="try-error"){
+maxMse <- 100000
+}
 
 impCalcScaleRMSE[is.na(impCalcScaleRMSE)]<-100000*maxRmse
 impCalcScaleMSE[is.na(impCalcScaleMSE)]<-100000*maxMse
@@ -88,13 +109,21 @@ cat("\n----Processing files:----\n")
 print(filesVarImp)
 
 # Concatenate the results
-
 for(i in 1:length(filesVarImp)){
 
 currentFile <- filesVarImp[i]
 
 # read file
 tempDF <- read.csv(filesVarImp[i],header=TRUE,sep="\t", strip.white = TRUE, na.strings = c("NA",""))
+
+if(is.factor(tempDF[,1])==TRUE){
+
+tempDF[,1] <- as.character(tempDF[,1])
+tempDF[,1] <- gsubfn(",",".",tempDF[,1])
+Sys.setlocale(category = "LC_NUMERIC", locale = "C")
+tempDF[,1] <- as.numeric(tempDF[,1])
+
+}
 
 # Check if there are any NA values and zero them before summing
 tempDF[is.na(tempDF)]<-0

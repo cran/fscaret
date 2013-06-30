@@ -45,9 +45,10 @@ funcRegPred
 ## testDF <- dataset.test
 ## 
 ## myFS<-fscaret(trainDF, testDF, myTimeLimit = 15, preprocessData=TRUE,
-## 	      Used.funcRegPred=c("rf","pcr","pls"), with.labels=TRUE,
+## 	      Used.funcRegPred=c("pcr","pls"), with.labels=TRUE,
 ## 	      supress.output=TRUE)
-## myRES_tab <- myFS$VarImp$matrixVarImp.MSE[1:10,c(1,2,3,5,6,7)]
+## myRES_tab <- myFS$VarImp$matrixVarImp.MSE[1:10,]
+## myRES_tab <- subset(myRES_tab, select=c("pcr","pls","SUM%","ImpGrad","Input_no"))
 ## myRES_rawMSE <- myFS$VarImp$rawMSE
 ## myRES_PPlabels <- myFS$PPlabels
 
@@ -63,9 +64,10 @@ trainDF <- dataset.train
 testDF <- dataset.test
 
 myFS<-fscaret(trainDF, testDF, myTimeLimit = 15, preprocessData=TRUE,
-	      Used.funcRegPred=c("rf","pcr","pls"), with.labels=TRUE,
+	      Used.funcRegPred=c("pcr","pls"), with.labels=TRUE,
 	      supress.output=TRUE)
-myRES_tab <- myFS$VarImp$matrixVarImp.MSE[1:10,c(1,2,3,5,6,7)]
+myRES_tab <- myFS$VarImp$matrixVarImp.MSE[1:10,]
+myRES_tab <- subset(myRES_tab, select=c("pcr","pls","SUM%","ImpGrad","Input_no"))
 myRES_rawMSE <- myFS$VarImp$rawMSE
 myRES_PPlabels <- myFS$PPlabels
 
@@ -104,11 +106,11 @@ lk_row.mse=nrow(myFS$VarImp$matrixVarImp.MSE)
 
 setEPS()
 
-barplot1 <- barplot(myFS$VarImp$matrixVarImp.MSE$SUM[1:(a*lk_row.mse)],
-	    cex.names=b, las = c, xlab="Variables", ylab="Importance Sum",
+barplot1 <- barplot(myFS$VarImp$matrixVarImp.MSE$"SUM%"[1:(a*lk_row.mse)],
+	    cex.names=b, las = c, xlab="Variables", ylab="Importance Sum%",
 	    names.arg=c(rownames(myFS$VarImp$matrixVarImp.MSE)[1:(a*lk_row.mse)]))
 	    
-lines(x = barplot1, y = myFS$VarImp$matrixVarImp.MSE$SUM[1:(a*lk_row.mse)])
-points(x = barplot1, y = myFS$VarImp$matrixVarImp.MSE$SUM[1:(a*lk_row.mse)])
+lines(x = barplot1, y = myFS$VarImp$matrixVarImp.MSE$"SUM%"[1:(a*lk_row.mse)])
+points(x = barplot1, y = myFS$VarImp$matrixVarImp.MSE$"SUM%"[1:(a*lk_row.mse)])
 
 

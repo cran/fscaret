@@ -124,6 +124,7 @@ labelsFrame <- as.data.frame(colnames(trainDF))
 
 # Create a train data set matrix
 trainMatryca_nr <- matrix(data=NA,nrow=lk_row,ncol=lk_col)
+colnames(trainMatryca_nr) <- colnames(trainDF)
 
 row=0
 col=0
@@ -140,6 +141,7 @@ lk_col_test = ncol(testDF)
 lk_row_test = nrow(testDF)
 
 testMatryca_nr <- matrix(data=NA,nrow=lk_row_test,ncol=lk_col_test)
+colnames(testMatryca_nr) <- colnames(testDF)
 
 row=0
 col=0
@@ -257,6 +259,7 @@ trainDF <- preprocessRes$trainMatryca
 testDF <- preprocessRes$testMatryca
 
 trainMatryca_nr <- matrix(data=NA,nrow=lk_row,ncol=lk_col)
+colnames(trainMatryca_nr) <- colnames(trainDF)
 
 row=0
 col=0
@@ -269,6 +272,7 @@ for(col in 1:(lk_col)) {
 
 
 testMatryca_nr <- matrix(data=NA,nrow=lk_row_test,ncol=lk_col_test)
+colnames(testMatryca_nr) <- colnames(testDF)
 
 row=0
 col=0

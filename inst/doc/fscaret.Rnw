@@ -41,7 +41,7 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\newcommand{\bld}[1]{\mbox{\boldmath $#1$}}
+\newcommand{\bld}[1]{\mbox{\boldmath{$#1$}}}
 \newcommand{\shell}[1]{\mbox{$#1$}}
 \renewcommand{\vec}[1]{\mbox{\bf {#1}}}
 
@@ -159,7 +159,7 @@ All the settings are documented in \texttt{Reference manual} of \pkg{fscaret} \u
 on a few valuable ones.
 \begin{itemize}
   \item \code{installReqPckg}
-The default setting is \code{FALSE}, but if set to \code{TRUE} prior to calculations it installs all packages from the sections ''Depends'' and ''Suggests'' of
+The default setting is \code{FALSE}, but if set to \code{TRUE} prior to calculations it installs all packages from the sections `Depends` and `Suggests` of
 \textsc{DESCRIPTION}. Please be advised to be logged as root (admin) if you want to install packages for all users.
 
 \item \code{preprocessData}
@@ -209,9 +209,10 @@ trainDF <- dataset.train
 testDF <- dataset.test
 
 myFS<-fscaret(trainDF, testDF, myTimeLimit = 15, preprocessData=TRUE,
-	      Used.funcRegPred=c("rf","pcr","pls"), with.labels=TRUE,
+	      Used.funcRegPred=c("pcr","pls"), with.labels=TRUE,
 	      supress.output=TRUE)
-myRES_tab <- myFS$VarImp$matrixVarImp.MSE[1:10,c(1,2,3,5,6,7)]
+myRES_tab <- myFS$VarImp$matrixVarImp.MSE[1:10,]
+myRES_tab <- subset(myRES_tab, select=c("pcr","pls","SUM%","ImpGrad","Input_no"))
 myRES_rawMSE <- myFS$VarImp$rawMSE
 myRES_PPlabels <- myFS$PPlabels
 @
@@ -226,9 +227,10 @@ trainDF <- dataset.train
 testDF <- dataset.test
 
 myFS<-fscaret(trainDF, testDF, myTimeLimit = 15, preprocessData=TRUE,
-	      Used.funcRegPred=c("rf","pcr","pls"), with.labels=TRUE,
+	      Used.funcRegPred=c("pcr","pls"), with.labels=TRUE,
 	      supress.output=TRUE)
-myRES_tab <- myFS$VarImp$matrixVarImp.MSE[1:10,c(1,2,3,5,6,7)]
+myRES_tab <- myFS$VarImp$matrixVarImp.MSE[1:10,]
+myRES_tab <- subset(myRES_tab, select=c("pcr","pls","SUM%","ImpGrad","Input_no"))
 myRES_rawMSE <- myFS$VarImp$rawMSE
 myRES_PPlabels <- myFS$PPlabels
 @
@@ -256,7 +258,7 @@ print(myRES_PPlabels)
 @
 \end{enumerate}
 
-As one can see in the example there were only three models used \code{"rf","pcr","pls"}, to use all available models please set option \code{Used.funcRegPred="all"}.
+As one can see in the example there were only two models used \code{"pcr","pls"}, to use all available models please set option \code{Used.funcRegPred="all"}.
 The results can be presented on a bar plot (see Figure \ref{F:barPlot}). Then the arbitrary feature reduction can be applied.
 
 
@@ -273,15 +275,15 @@ lk_row.mse=nrow(myFS$VarImp$matrixVarImp.MSE)
 
 setEPS()
 
-barplot1 <- barplot(myFS$VarImp$matrixVarImp.MSE$SUM[1:(a*lk_row.mse)],
-	    cex.names=b, las = c, xlab="Variables", ylab="Importance Sum",
+barplot1 <- barplot(myFS$VarImp$matrixVarImp.MSE$"SUM%"[1:(a*lk_row.mse)],
+	    cex.names=b, las = c, xlab="Variables", ylab="Importance Sum%",
 	    names.arg=c(rownames(myFS$VarImp$matrixVarImp.MSE)[1:(a*lk_row.mse)]))
 	    
-lines(x = barplot1, y = myFS$VarImp$matrixVarImp.MSE$SUM[1:(a*lk_row.mse)])
-points(x = barplot1, y = myFS$VarImp$matrixVarImp.MSE$SUM[1:(a*lk_row.mse)])
+lines(x = barplot1, y = myFS$VarImp$matrixVarImp.MSE$"SUM%"[1:(a*lk_row.mse)])
+points(x = barplot1, y = myFS$VarImp$matrixVarImp.MSE$"SUM%"[1:(a*lk_row.mse)])
 @
 
-    \caption{A sum of feature ranking of models trained and tested on \code{dataset.train}, three models were used \code{"rf","pcr","pls"}. }
+    \caption{A sum of feature ranking of models trained and tested on \code{dataset.train}, two models were used \code{"pcr","pls"}. }
     \label{F:barPlot}         
   \end{center}
 \end{figure}
