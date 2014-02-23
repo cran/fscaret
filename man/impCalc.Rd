@@ -32,7 +32,9 @@ impCalc function lists RData files in working directory assuming there are only 
 Jakub Szlek and Aleksander Mendyk
 }
 \examples{
-
+# 
+# Hashed to comply with new CRAN check
+# 
 library(fscaret)
 
 # Read working directory

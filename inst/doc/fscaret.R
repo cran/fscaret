@@ -46,7 +46,7 @@ funcRegPred
 ## 
 ## myFS<-fscaret(trainDF, testDF, myTimeLimit = 15, preprocessData=TRUE,
 ## 	      Used.funcRegPred=c("pcr","pls"), with.labels=TRUE,
-## 	      supress.output=TRUE)
+## 	      supress.output=TRUE, no.cores=1)
 ## myRES_tab <- myFS$VarImp$matrixVarImp.MSE[1:10,]
 ## myRES_tab <- subset(myRES_tab, select=c("pcr","pls","SUM%","ImpGrad","Input_no"))
 ## myRES_rawMSE <- myFS$VarImp$rawMSE
@@ -65,7 +65,7 @@ testDF <- dataset.test
 
 myFS<-fscaret(trainDF, testDF, myTimeLimit = 15, preprocessData=TRUE,
 	      Used.funcRegPred=c("pcr","pls"), with.labels=TRUE,
-	      supress.output=TRUE)
+	      supress.output=TRUE, no.cores=1)
 myRES_tab <- myFS$VarImp$matrixVarImp.MSE[1:10,]
 myRES_tab <- subset(myRES_tab, select=c("pcr","pls","SUM%","ImpGrad","Input_no"))
 myRES_rawMSE <- myFS$VarImp$rawMSE

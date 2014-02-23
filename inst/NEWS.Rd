@@ -2,6 +2,17 @@
 \title{News for Package \pkg{fscaret}}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
+\section{Changes in version 0.8.5.4}{
+\itemize{
+
+\item Multiple threads CRAN check fixed?
+
+\item Citation file added
+
+}
+
+}
+
 \section{Changes in version 0.8.5.3}{
 \itemize{ 
 

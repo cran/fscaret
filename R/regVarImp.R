@@ -8,7 +8,7 @@ fitControlSet <- fitControl
 lk_col <- lk_col
 supress.output <- supress.output
 mySystem <- mySystem
-
+no.cores <- no.cores
 
 
 regVarPred <- function(funcRegPred) {

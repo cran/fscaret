@@ -13,7 +13,8 @@ impCalcRES <- list()
 fscaretRES <- list()
 methodSet <- method
 returnResampSet <- returnResamp
-fitControl <- trainControl(method = methodSet, returnResamp = returnResampSet) 
+fitControl <- trainControl(method = methodSet, returnResamp = returnResampSet)
+no.cores<-no.cores
 
 # Get working dir
 mywd <- getwd()
@@ -106,8 +107,14 @@ if(is.null(skel_outfile)){
 
 if(mySystem!="windows"){
   
-  if(is.null(no.cores)){
+  if(no.cores=="NULL"){
+  
     no.cores<-detectCores()
+  
+  } else {
+  
+  no.cores <- no.cores
+  
   }
   
 } else {

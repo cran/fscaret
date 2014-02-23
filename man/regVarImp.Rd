@@ -51,6 +51,8 @@ Jakub Szlek and Aleksander Mendyk
 }
 \examples{
 
+# Hashed to comply with new CRAN check
+# 
 # Load library
 library(fscaret)
 
