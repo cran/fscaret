@@ -2,10 +2,20 @@
 \title{News for Package \pkg{fscaret}}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
+
+\section{Changes in version 0.8.5.5}{
+\itemize{
+
+\item Information on founding bodies were added to description section and vigniette together with references.
+
+}
+
+}
+
 \section{Changes in version 0.8.5.4}{
 \itemize{
 
-\item Multiple threads CRAN check fixed?
+\item Multiple threads CRAN check fixed
 
 \item Citation file added
 

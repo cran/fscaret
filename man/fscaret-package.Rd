@@ -15,18 +15,21 @@ On Windows OS the time limiting function is off also the number of cores used is
 \tabular{ll}{
 Package: \tab fscaret\cr
 Type: \tab Package\cr
-Version: \tab 0.8.5.4\cr
-Date: \tab 2014-02-23\cr
+Version: \tab 0.8.5.5\cr
+Date: \tab 2014-03-27\cr
 License: \tab GPL-2 | GPL-3\cr
 }
 }
 \author{
-Jakub Szlek <j.szlek@uj.edu.pl>, acknowledgments to Aleksander Mendyk, contributions from stackoverflow and r-help@r-project.org mailing list community.
-
-Maintainer: Jakub Szlek <j.szlek@uj.edu.pl>.
+Jakub Szlek <j.szlek@uj.edu.pl>, acknowledgments to Aleksander Mendyk, contributions from stackoverflow and r-help@r-project.org mailing list community.\cr
+Maintainer: Jakub Szlek <j.szlek@uj.edu.pl>.\cr
+Acknowledgments:\cr
+This work was funded by Poland-Singapore bilateral cooperation project no 2/3/POL-SIN/2012\cr
 }
 \references{
-Kuhn M. (2008) Building Predictive Models in R Using the caret Package \emph{Journal of Statistical Software} \bold{28(5)} \url{http://www.jstatsoft.org/}.
+Kuhn M. (2008) Building Predictive Models in R Using the caret Package \emph{Journal of Statistical Software} \bold{28(5)} \url{http://www.jstatsoft.org/}.\cr
+Szlek J, Paclawski A, Lau R, Jachowicz R, Mendyk A. Heuristic modeling of macromolecule release from PLGA microspheres. \emph{International Journal of Nanomedicine.}
+\bold{2013:8(1); 4601 - 4611}. \url{http://www.dovepress.com/international-journal-of-nanomedicine-journal}.
 }
 \keyword{ package }
 \seealso{

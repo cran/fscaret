@@ -261,7 +261,6 @@ print(myRES_PPlabels)
 As one can see in the example there were only two models used \code{"pcr","pls"}, to use all available models please set option \code{Used.funcRegPred="all"}.
 The results can be presented on a bar plot (see Figure \ref{F:barPlot}). Then the arbitrary feature reduction can be applied.
 
-
 \begin{figure}
   \begin{center}  
 <<barPlot, echo = FALSE, results = hide, fig = TRUE, width = 8, height = 4.25>>=
@@ -287,6 +286,20 @@ points(x = barplot1, y = myFS$VarImp$matrixVarImp.MSE$"SUM%"[1:(a*lk_row.mse)])
     \label{F:barPlot}         
   \end{center}
 \end{figure}
+
+\section{Acknowledgments}
+
+This work was funded by Poland-Singapore bilateral cooperation project no 2/3/POL-SIN/2012.
+
+\section{References}
+\begin{enumerate}
+
+\item Szlek J, Paclawski A, Lau R, Jachowicz R, Mendyk A. Heuristic modeling of macromolecule release from PLGA microspheres. International Journal of Nanomedicine. 2013:8(1); 4601 - 4611.
+\href{http://www.dovepress.com/heuristic-modeling-of-macromolecule-release-from-plga-microspheres-peer-reviewed-article-IJN}{link to webpage}
+\item Szlek, J., Paclawski, A., Lau, R., Jachowicz, R., Mendyk, A. Heuristic modeling of macromolecules release from PLGA microspheres. Conference procedings. Gdansk, May 24-25, 2013.\href{http://www.polgerpharm.gumed.edu.pl/attachment/attachment/20321/AbstractBook_Cover_Corrected.pdf}{Abstract book}
+\item Szlek J., Paclawski A., Lau R., Wisniowska B., Polak S., Jachowicz R., Mendyk A. The fscaret: feature ranking, where quantity meets quality. Biocybernetics and Biomedical Engineering. Under review.
+
+\end{enumerate}
 
 
 
