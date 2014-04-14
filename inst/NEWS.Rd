@@ -2,6 +2,14 @@
 \title{News for Package \pkg{fscaret}}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
+\section{Changes in version 0.8.5.6}{
+\itemize{
+
+\item Small bug for parameter no.cores was fixed, now one should use numeric format, leave in NULL or simple delete the parameter.
+
+}
+
+}
 
 \section{Changes in version 0.8.5.5}{
 \itemize{

@@ -51,7 +51,7 @@ Vector of regression models to be used, for all available models please enter Us
 Vector of classification models to be used (for v0.8 it is not available)
 }
   \item{no.cores}{
-Number of cores to be used for modeling, if NULL all available cores are used
+Number of cores to be used for modeling, if NULL all available cores are used, should be numeric type or NULL
 }
   \item{method}{
 Method passed to fitControl of caret package

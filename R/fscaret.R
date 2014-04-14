@@ -107,7 +107,7 @@ if(is.null(skel_outfile)){
 
 if(mySystem!="windows"){
   
-  if(no.cores=="NULL"){
+  if(is.null(no.cores)){
   
     no.cores<-detectCores()
   
