@@ -2,6 +2,29 @@
 \title{News for Package \pkg{fscaret}}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
+\section{Changes in version 0.8.6.2}{
+\itemize{
+
+\item Done some tidying R code in regVarImp()
+
+}
+
+}
+
+
+\section{Changes in version 0.8.6.1}{
+\itemize{
+
+\item Bunch of new algorithms added following caret development.
+\item Re-written regVarImp() function.
+\item Vignette was revised and few explanatory sentences added.
+\item Fixed few small bugs.
+
+}
+
+}
+
+
 \section{Changes in version 0.8.5.6}{
 \itemize{
 

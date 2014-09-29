@@ -13,7 +13,7 @@ impCalcRES <- list()
 fscaretRES <- list()
 methodSet <- method
 returnResampSet <- returnResamp
-fitControl <- trainControl(method = methodSet, returnResamp = returnResampSet)
+fitControl <- trainControl(method = methodSet, returnResamp = returnResampSet, ...)
 no.cores<-no.cores
 
 # Get working dir
@@ -81,6 +81,8 @@ cat("\n----Please check the result of: is.data.frame(yourData) function ----\n")
 Sys.setlocale(category = "LC_NUMERIC", locale = "C")
 
 # Set models data set to use in funcRegPred
+if(regPred==TRUE){
+
 if(is.null(Used.funcRegPred)){
 
 definedModels <- c("rf")
@@ -94,6 +96,35 @@ definedModels <- funcRegPred
 definedModels <- Used.funcRegPred
 
 }
+
+}
+
+# 
+# Code block prepared to impement regClass variable importance
+# 
+
+# Set models data set to use in funcClassPred
+if(classPred==TRUE){
+
+if(is.null(Used.funcClassPred)){
+
+definedModels <- c("rf")
+
+} else if(Used.funcClassPred=="all"){
+
+definedModels <- funcClassPred
+
+} else {
+
+definedModels <- Used.funcClassPred
+
+}
+
+}
+
+# 
+# Code block prepared to impement regClass variable importance
+# 
 
 # Check for NULL skel_outfile obj
 
@@ -295,6 +326,7 @@ labelsFrame <- preprocessRes$labelsDF
 }
 
 
+# Engine for regression
 if(regPred==TRUE){
 
 # Suppress warnings
@@ -312,9 +344,7 @@ yTest <- as.vector(testMatryca_nr[,lk_col])
 regPredRES <- regVarImp(definedModels, xTrain, yTrain, xTest, fitControl,
 			myTimeLimit, no.cores, lk_col, supress.output, mySystem)
 
-
-}
-
+			
 if(is.null(impCalcMet)){
 
 print("You haven't chosen impCalcMet, so no variable importance calculations were done!")
@@ -333,8 +363,66 @@ if(preprocessData==TRUE){
 		      PPlabels=labelsFrame, PPTrainDF=trainDF,
 		      PPTestDF=testDF)
   
+}			
+
 }
 
+# Engine for classification
+if(classPred==TRUE){
+
+# Suppress warnings
+options(warn=-1)
+
+cat("\n-----Warnings have been supressed!----\n")
+
+# 
+# Code block prepared to impement regClass variable importance
+# pre-ALPHA version
+# 
+# # definition of input and output vector
+xTrain <- data.frame(trainMatryca_nr[,-lk_col])
+yTrain <- as.factor(trainMatryca_nr[,lk_col])
+
+xTest <- data.frame(testMatryca_nr[,-lk_col])
+yTest <- as.factor(testMatryca_nr[,lk_col])
+
+regClassRES <- classVarImp(definedModels, xTrain, yTrain, xTest, fitControl,
+			myTimeLimit, no.cores, lk_col, supress.output, mySystem)
+
+			
+if(is.null(impCalcMet)){
+
+print("You haven't chosen impCalcMet, so no variable importance calculations were done!")
+
+} else if((!is.null(impCalcMet))&&((impCalcMet=="RMSE")||(impCalcMet=="MSE")||(impCalcMet=="RMSE&MSE"))){
+
+impCalcRES <- try(impCalc(skel_outfile, xTest, yTest, lk_col))
+
+if(class(impCalcRES)=="try-error"){
+
+print("Importance scaling failed, please be advised this functionality is pre-alpha!")
+
+}
+
+impCalcRES <- NA
+
+}
+
+fscaretRES <- list(ModelPred=regClassRES, VarImp=impCalcRES)
+
+if(preprocessData==TRUE){
+  
+  fscaretRES <- list(ModelPred=regClassRES, VarImp=impCalcRES,
+		      PPlabels=labelsFrame, PPTrainDF=trainDF,
+		      PPTestDF=testDF)
+  
+}			
+# 
+# Code block prepared to impement Class variable importance
+# pre-ALPHA version
+# 
+
+}
 # Return to your working dir
 setwd(mywd)
 

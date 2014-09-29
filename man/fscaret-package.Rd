@@ -15,8 +15,8 @@ On Windows OS the time limiting function is off also the number of cores used is
 \tabular{ll}{
 Package: \tab fscaret\cr
 Type: \tab Package\cr
-Version: \tab 0.8.5.6\cr
-Date: \tab 2014-04-14\cr
+Version: \tab 0.8.6.2\cr
+Date: \tab 2014-09-29\cr
 License: \tab GPL-2 | GPL-3\cr
 }
 }

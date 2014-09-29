@@ -1,6 +1,7 @@
 exportPattern("^[[:alpha:]]+")
 import(parallel, gsubfn, caret)
-export(dataPreprocess,
+export(classVarImp,
+	dataPreprocess,
 	fscaret,
 	funcRegPred,
 	impCalc,
