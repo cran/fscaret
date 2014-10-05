@@ -1,9 +1,18 @@
 
 dataPreprocess <- function(trainMatryca_nr, testMatryca_nr, labelsFrame, lk_col, lk_row, with.labels){
 
-orig_input_no <- data.frame("Orig_labels"=c(1:lk_col))
+orig_input_no <- data.frame("Orig_labels"=c(1:(lk_col-1)))
 
 lk_col_at_start <- lk_col
+
+xTrain <- as.data.frame(trainMatryca_nr[,1:(ncol(trainMatryca_nr)-1)])
+yTrain <- as.data.frame(trainMatryca_nr[,ncol(trainMatryca_nr)])
+
+xTest <- as.data.frame(testMatryca_nr[,1:(ncol(testMatryca_nr)-1)])
+yTest <- as.data.frame(testMatryca_nr[,ncol(trainMatryca_nr)])
+
+trainMatryca_nr <- xTrain
+testMatryca_nr <- xTest
 
 preprocessList<-list()
 # A) Check for near zero variance predictors 
@@ -72,6 +81,9 @@ lk_row = nrow(trainMatryca_nr)
 
 exportlabelsFrame <- data.frame(orig_input_no,labelsFrame[,1])
 colnames(exportlabelsFrame)<-c("Orig Input No","Labels")
+
+trainMatryca_nr <- as.data.frame(cbind(trainMatryca_nr,yTrain))
+testMatryca_nr <- as.data.frame(cbind(testMatryca_nr,yTest))
 
 preprocessList <- list("trainMatryca"=trainMatryca_nr, "testMatryca"=testMatryca_nr, "labelsDF"=exportlabelsFrame)
   

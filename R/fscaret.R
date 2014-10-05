@@ -1,5 +1,5 @@
 fscaret<-function(trainDF, testDF, installReqPckg=FALSE,
-		  preprocessData=FALSE, with.labels=FALSE, classPred=FALSE,
+		  preprocessData=FALSE, with.labels=TRUE, classPred=FALSE,
 		  regPred=TRUE, skel_outfile=NULL,
 		  impCalcMet="RMSE&MSE", myTimeLimit=24*60*60,
 		  Used.funcRegPred=NULL, Used.funcClassPred=NULL,
@@ -158,7 +158,7 @@ lk_col = ncol(trainDF)
 lk_row = nrow(trainDF)
 
 # Read labels of trainDF
-labelsFrame <- as.data.frame(colnames(trainDF))
+labelsFrame <- as.data.frame(colnames(trainDF[1:(ncol(trainDF)-1)]))
 
 # Create a train data set matrix
 trainMatryca_nr <- matrix(data=NA,nrow=lk_row,ncol=lk_col)
@@ -321,7 +321,7 @@ for(col in 1:(lk_col_test)) {
     }
 }
 
-labelsFrame <- preprocessRes$labelsDF
+labelsFrame <- as.data.frame(preprocessRes$labelsDF[,ncol(preprocessRes$labelsDF)])
 
 }
 
@@ -351,7 +351,7 @@ print("You haven't chosen impCalcMet, so no variable importance calculations wer
 
 } else if((!is.null(impCalcMet))&&((impCalcMet=="RMSE")||(impCalcMet=="MSE")||(impCalcMet=="RMSE&MSE"))){
 
-impCalcRES <- impCalc(skel_outfile, xTest, yTest, lk_col)
+impCalcRES <- impCalc(skel_outfile, xTest, yTest, lk_col,labelsFrame, with.labels)
 
 }
 
@@ -396,7 +396,7 @@ print("You haven't chosen impCalcMet, so no variable importance calculations wer
 
 } else if((!is.null(impCalcMet))&&((impCalcMet=="RMSE")||(impCalcMet=="MSE")||(impCalcMet=="RMSE&MSE"))){
 
-impCalcRES <- try(impCalc(skel_outfile, xTest, yTest, lk_col))
+impCalcRES <- try(impCalc(skel_outfile, xTest, yTest, lk_col,labelsFrame, with.labels))
 
 if(class(impCalcRES)=="try-error"){
 

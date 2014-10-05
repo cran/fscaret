@@ -83,7 +83,7 @@ try(write.table(variableImportanceRes, col.names=TRUE, row.names=TRUE, quote=FAL
 
     if(class(yPred)!="try-error"){
 
-      variableImportanceRes <- try(filterVarImp(xTest,yPred),silent=TRUE)
+      variableImportanceRes <- try(filterVarImp(xTest,yPred,nonpara=TRUE),silent=TRUE)
       
 	if(class(variableImportanceRes)!="try-error") {
 
@@ -92,28 +92,31 @@ try(write.table(variableImportanceRes, col.names=TRUE, row.names=TRUE, quote=FAL
 	  
 	} else if(class(variableImportanceRes)=="try-error") {
 	
-	  print("Predicting variable importance has failed!")
+	  print("Predicting variable importance (first try) has failed!")
 	  resultVarImpListCombREG[funcRegPred] <- try(list(NA),silent=TRUE)
 	
 	}
 
       }
+      
+	if((class(res)!="try-error") && (class(variableImportanceRes) != "try-error")){
+	  # save results
+	    try(save(res, file=outfile),silent=TRUE)
 
-      # save results
-      try(save(res, file=outfile),silent=TRUE)
-
-      try(write.table(variableImportanceRes,col.names=TRUE, row.names=TRUE, quote=FALSE, sep="\t", file=outfileImp))
+	    try(write.table(variableImportanceRes,col.names=TRUE, row.names=TRUE, quote=FALSE, sep="\t", file=outfileImp))
+      
+	}
 
     if ((class(res)!="try-error") && (class(variableImportanceRes) == "try-error")){
     
     variableImportanceRes <- try(varImp(res),silent=TRUE)
 
-    resultVarImpListCombREG[funcRegPred] <- try(list(variableImportanceRes),silent=TRUE)
+    resultVarImpListCombREG[funcRegPred] <- try(list(variableImportanceRes$importance),silent=TRUE)
     
       # save results
       try(save(res, file=outfile),silent=TRUE)
 
-      try(write.table(variableImportanceRes,col.names=TRUE, row.names=TRUE, quote=FALSE, sep="\t", file=outfileImp))
+      try(write.table(variableImportanceRes$importance,col.names=TRUE, row.names=TRUE, quote=FALSE, sep="\t", file=outfileImp))
 
     }
 
@@ -123,12 +126,12 @@ try(write.table(variableImportanceRes, col.names=TRUE, row.names=TRUE, quote=FAL
 
       if(class(variableImportanceRes)!="try-error") {
 
-	resultVarImpListCombREG[funcRegPred] <- try(list(variableImportanceRes),silent=TRUE)
+	resultVarImpListCombREG[funcRegPred] <- try(list(variableImportanceRes$importance),silent=TRUE)
 
 	# save results
 	try(save(res, file=outfile),silent=TRUE)
 
-	try(write.table(variableImportanceRes,col.names=TRUE, row.names=TRUE, quote=FALSE, sep="\t", file=outfileImp))
+	try(write.table(variableImportanceRes$importance,col.names=TRUE, row.names=TRUE, quote=FALSE, sep="\t", file=outfileImp))
 
       } else if(class(variableImportanceRes)!="try-error"){
 
@@ -136,7 +139,7 @@ try(write.table(variableImportanceRes, col.names=TRUE, row.names=TRUE, quote=FAL
 
 	  if(class(yPred)!="try-error"){
 
-	    variableImportanceRes <- try(filterVarImp(xTest,yPred),silent=TRUE)
+	    variableImportanceRes <- try(filterVarImp(xTest,yPred,nonpara=TRUE),silent=TRUE)
 
 	      if(class(variableImportanceRes)!="try-error") {
 
@@ -146,7 +149,7 @@ try(write.table(variableImportanceRes, col.names=TRUE, row.names=TRUE, quote=FAL
 
 	      } else if(class(variableImportanceRes)=="try-error") {
 
-	      print("Predicting variable importance has failed!")
+	      print("Predicting variable importance (second try) has failed!")
 	      resultVarImpListCombREG[funcRegPred] <- try(list(NA),silent=TRUE)
 
 	  }
@@ -161,7 +164,7 @@ try(write.table(variableImportanceRes, col.names=TRUE, row.names=TRUE, quote=FAL
       
   } else {
   
-  print("Predicting variable importance has failed!")
+  print("Predicting variable importance (third try) has failed!")
   resultVarImpListCombREG[funcRegPred] <- try(list(NA),silent=TRUE)
   
   }
@@ -173,12 +176,34 @@ try(write.table(variableImportanceRes, col.names=TRUE, row.names=TRUE, quote=FAL
   
   } else if(class(variableImportanceRes)=="try-error"){
   
-  print("Predicting variable importance has failed!")
+  print("Predicting variable importance (fourth try) has failed!")
   resultVarImpListCombREG[funcRegPred] <- try(list(NA),silent=TRUE)
   
   }
+
+  if((file.exists(paste(outfile))) || file.exists(outfileImp)){
+#   general check for files RData and VarImp.txt
+    if(((file.exists(paste(outfile)))==FALSE) || (file.exists(outfileImp)==FALSE)){
+      try(file.remove(paste(outfile)))
+      try(file.remove(paste(outfileImp)))
+    } else {
+    
+    print("RData and VarImp.txt files exists!")
+    
+#     # save results
+#     try(save(res, file=outfile),silent=TRUE)
+#     resultVarImpListCombREG[funcRegPred] <- try(list(variableImportanceRes),silent=TRUE)
+#     try(write.table(variableImportanceRes,col.names=TRUE, row.names=TRUE, quote=FALSE, sep="\t", file=outfileImp))
+    
+    }
+    
+  }
+  
   
 }
+
+
+
 
 resultVarImpListCombREG[model] <- mclapply(model,regVarPred, mc.preschedule=FALSE, mc.cores=no.cores)
 

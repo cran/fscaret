@@ -1,10 +1,13 @@
-impCalc <- function(skel_outfile, xTest, yTest, lk_col){
+impCalc <- function(skel_outfile, xTest, yTest, lk_col,labelsFrame,with.labels){
 # Get RMSE from all .RData files
 
 filesRData <- list.files(pattern = "_default_.*.RData")
 impCalcScaleRMSE<-list()
 impCalcScaleMSE<-list()
 impCalcRes<-list()
+labelsDF <- as.data.frame(labelsFrame[1:(ncol(xTest)),])
+
+
 
 # Dummy
 res <- NULL
@@ -127,33 +130,56 @@ tempDF[,1] <- as.numeric(tempDF[,1])
 
 # Check if there are any NA values and zero them before summing
 tempDF[is.na(tempDF)]<-0
-
 # Get absolute values of variable importance
 tempDF <- abs(tempDF)
 
-# Delete X char from rownames
-rownames(tempDF)<-gsubfn("X","",rownames(tempDF))
+
+
+
+if(with.labels==FALSE){
+
+# Delete V char from rownames
+rownames(tempDF)<-gsubfn("V","",rownames(tempDF))
+
+# Sort data.frame according to rownames
+tempDF<-tempDF[order(as.numeric(rownames(tempDF))),,drop=FALSE]
+# tempDF.MSE<-tempDF.MSE[order(as.numeric(rownames(tempDF.MSE))),,drop=FALSE]
+
+} else if(with.labels==TRUE){
+
+rownames(labelsDF) <- labelsDF[,1]
+
+tempDF <- as.data.frame(tempDF[rownames(labelsDF),])
+
+# # print tempDF after sorting
+# print(tempDF)
+
+}
 
 # Scale results from 0 to 100
 tempDF.RMSE<-(tempDF/sum(tempDF[,1]))*100*impCalcScaleRMSE[,i]
 tempDF.MSE<-(tempDF/sum(tempDF[,1]))*100*impCalcScaleMSE[,i]
 
-# Sort data.frame according to rownames
-tempDF.RMSE<-tempDF.RMSE[order(as.numeric(rownames(tempDF.RMSE))),,drop=FALSE]
-tempDF.MSE<-tempDF.MSE[order(as.numeric(rownames(tempDF.MSE))),,drop=FALSE]
-
 
 cols=i
-rows=0
+rows=1
 for(rows in 1:nrow(tempDF.RMSE)){
 matrycaVarImp.RMSE[rows,cols]<-tempDF.RMSE[rows,]
 }
 
+# print matrycaVarImp.RMSE
+# print(matrycaVarImp.RMSE)
+
+
+
 cols=i
-rows=0
+rows=1
 for(rows in 1:nrow(tempDF.MSE)){
 matrycaVarImp.MSE[rows,cols]<-tempDF.MSE[rows,]
 }
+
+# print matrycaVarImp.RMSE
+# print(matrycaVarImp.MSE)
 
 }
 

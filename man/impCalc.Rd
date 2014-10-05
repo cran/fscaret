@@ -9,7 +9,7 @@ It also stores the raw MSE and RMSE derived from models. impCalc function should
 user has trained models from caret package in RData files.
 }
 \usage{
-impCalc(skel_outfile, xTest, yTest, lk_col)
+impCalc(skel_outfile, xTest, yTest, lk_col,labelsFrame,with.labels)
 }
 \arguments{
   \item{skel_outfile}{
@@ -23,6 +23,12 @@ Output vector of testing data set
 }
   \item{lk_col}{
 Number of columns of whole data set
+}
+\item{labelsFrame}{
+Labels to sort variable importance
+}
+\item{with.labels}{
+Pass with.labels argument. It is advised to ALWAYS use labels as in some cases VarImp returns importance in descending values. If you insist turning with.labels FALSE, then make sure data base contains pure data and you read it (read.csv) to data.frame with option header=FALSE. 
 }
 }
 \details{
@@ -57,6 +63,8 @@ no.cores <- 2
 supress.output <- TRUE
 skel_outfile <- paste("_default_",sep="")
 mySystem <- .Platform$OS.type
+with.labels <- TRUE
+
 
 if(mySystem=="windows"){
 no.cores <- 1
@@ -112,7 +120,7 @@ myVarImp <- regVarImp(model, xTrain, yTrain, xTest,
 	    supress.output, mySystem)
 
 
-myImpCalc <- impCalc(skel_outfile, xTest, yTest, lk_col)
+myImpCalc <- impCalc(skel_outfile, xTest, yTest, lk_col,labelsFrame,with.labels)
 
 }
 \keyword{ design }

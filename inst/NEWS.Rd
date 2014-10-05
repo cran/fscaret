@@ -2,6 +2,17 @@
 \title{News for Package \pkg{fscaret}}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
+\section{Changes in version 0.8.6.3}{
+\itemize{
+
+\item Critical bug fixed, sorting by labels at reading varImp files was incorrect between v0.8.6.1 and v0.8.6.2 which inflicted importance where variables were sorted in descending order regardless input number.
+\item Check on existance of RData and corresponding varImp tables was added.
+
+}
+
+}
+
+
 \section{Changes in version 0.8.6.2}{
 \itemize{
 

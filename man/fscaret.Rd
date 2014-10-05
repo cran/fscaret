@@ -8,7 +8,7 @@ Main function for fast feature selection. It utilizes other functions as regPred
 }
 \usage{
 fscaret(trainDF, testDF, installReqPckg = FALSE, preprocessData = FALSE,
-	with.labels = FALSE, classPred = FALSE, regPred = TRUE, skel_outfile = NULL,
+	with.labels = TRUE, classPred = FALSE, regPred = TRUE, skel_outfile = NULL,
 	impCalcMet = "RMSE&MSE", myTimeLimit = 24 * 60 * 60, Used.funcRegPred = NULL,
 	Used.funcClassPred = NULL, no.cores = NULL, method = "boot", returnResamp = "all",
 	missData=NULL, supress.output=FALSE, ...)

@@ -78,7 +78,7 @@ colnames(trainMatrix) <- paste("X",c(1:ncol(trainMatrix)),sep="")
 
 testMatrix <- trainMatrix[sample(round(0.1*nrow(trainMatrix))),]
 
-labelsDF <- data.frame("Labels"=paste("X",c(1:ncol(trainMatrix)),sep=""))
+labelsDF <- data.frame("Labels"=paste("X",c(1:(ncol(trainMatrix)-1)),sep=""))
 
 lk_col <- ncol(trainMatrix)
 lk_row <- nrow(trainMatrix)
