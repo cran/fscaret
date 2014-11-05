@@ -1,12 +1,3 @@
-# 
-# Code block prepared to impement Class variable importance
-# 
-# pre-ALPHA VERSION!
-# 
-# Code block prepared to impement Class variable importance
-# 
-
-
 
 classVarImp <- function(model, xTrain, yTrain, xTest, fitControl, myTimeLimit, no.cores, lk_col, supress.output, mySystem){
 
@@ -21,7 +12,7 @@ mySystem <- mySystem
 no.cores <- no.cores
 
 
-regVarPred <- function(funcClassPred) {
+classVarPred <- function(funcClassPred) {
 
 #Print out function names
 cat("----------------------------------------\n")
@@ -74,86 +65,169 @@ variableImportanceRes <- try(varImp(res$finalModel),silent=TRUE)
 
 resultVarImpListCombCLASS[funcClassPred] <- try(list(variableImportanceRes),silent=TRUE)
 
-if(class(variableImportanceRes) == "try-error"){
-
-  yPred <- try(predict(res,xTest),silent=TRUE)
-
-    if(class(yPred)!="try-error"){
-
-      variableImportanceRes <- try(filterVarImp(xTest,yPred),silent=TRUE)
-
-	if(class(variableImportanceRes)!="try-error") {
-
-	  resultVarImpListCombCLASS[funcClassPred] <- try(list(variableImportanceRes),silent=TRUE)
-
-	}
-
-    }
-}
+      cat("----------------------------------------\n")
+      cat("",funcClassPred,"\n")
+      cat("----------------------------------------\n")
+      cat("Elapsed time: ",timer2,"\n")
+#       cat("Variable importance: \n")
 
 if((class(res) != "try-error")&&(class(variableImportanceRes) != "try-error")){
-
 
 # save results
 try(save(res, file=outfile),silent=TRUE)
 
 try(write.table(variableImportanceRes, col.names=TRUE, row.names=TRUE, quote=FALSE, sep="\t", file=outfileImp),silent=TRUE)
 
-cat("----------------------------------------\n")
-cat("",funcClassPred,"\n")
-cat("----------------------------------------\n")
-cat("Elapsed time: ",timer2,"\n")
-cat("Variable importance: \n")
-try(print(variableImportanceRes),silent=TRUE)
-
   } else if(class(res) != "try-error"){
 
-variableImportanceRes <- try(varImp(res),silent=TRUE)
+      yPred <- try(predict(res,xTest),silent=TRUE)
 
-try(write.table(variableImportanceRes$importance, col.names=TRUE, row.names=TRUE, quote=FALSE, sep="\t", file=outfileImp),silent=TRUE)
+    if(class(yPred)!="try-error"){
 
-resultVarImpListCombCLASS[funcClassPred] <- try(list(variableImportanceRes),silent=TRUE)
+      variableImportanceRes <- try(filterVarImp(xTest,yPred,nonpara=TRUE),silent=TRUE)
+      
+	if(class(variableImportanceRes)!="try-error") {
 
-variableImportanceRes <- try(filterVarImp(xTest,yPred,nonpara=TRUE),silent=TRUE)
+	  resultVarImpListCombCLASS[funcClassPred] <- try(list(variableImportanceRes),silent=TRUE)
+	  try(write.table(variableImportanceRes,col.names=TRUE, row.names=TRUE, quote=FALSE, sep="\t", file=outfileImp))
+	  
+	} else if(class(variableImportanceRes)=="try-error") {
+	
+	  print("Predicting variable importance (first try) has failed!")
+	  resultVarImpListCombCLASS[funcClassPred] <- try(list(NA),silent=TRUE)
+	
+	}
 
-resultVarImpListCombCLASS[funcClassPred] <- try(list(variableImportanceRes),silent=TRUE)
+      }
+      
+	if((class(res)!="try-error") && (class(variableImportanceRes) != "try-error")){
+	  # save results
+	    try(save(res, file=outfile),silent=TRUE)
 
-# save results
-try(save(res, file=outfile),silent=TRUE)
+	    try(write.table(variableImportanceRes,col.names=TRUE, row.names=TRUE, quote=FALSE, sep="\t", file=outfileImp))
+      
+	}
 
-try(write.table(variableImportanceRes,col.names=TRUE, row.names=TRUE, quote=FALSE, sep="\t", file=outfileImp))
+    if ((class(res)!="try-error") && (class(variableImportanceRes) == "try-error")){
+    
+    variableImportanceRes <- try(varImp(res),silent=TRUE)
 
-cat("----------------------------------------\n")
-cat("",funcClassPred,"\n")
-cat("----------------------------------------\n")
-cat("Elapsed time: ",timer2,"\n")
-cat("Variable importance: \n")
-try(print(variableImportanceRes),silent=TRUE)
+    resultVarImpListCombCLASS[funcClassPred] <- try(list(variableImportanceRes$importance),silent=TRUE)
+    
+      # save results
+      try(save(res, file=outfile),silent=TRUE)
+
+      try(write.table(variableImportanceRes$importance,col.names=TRUE, row.names=TRUE, quote=FALSE, sep="\t", file=outfileImp))
+
+    }
 
   } else if (class(variableImportanceRes) == "try-error"){
 
-print("Predicting variable importance has failed!")
-resultVarImpListCombCLASS[funcClassPred] <- try(list(NA),silent=TRUE)
+      variableImportanceRes <- try(varImp(res),silent=TRUE)
 
-  } else if (class(res) == "try-error"){
- 
-print("Building model has failed or reached timelimit!")
-resultVarImpListCombCLASS[funcClassPred] <- try(list(NA),silent=TRUE)
+      if(class(variableImportanceRes)!="try-error") {
 
+	      resultVarImpListCombCLASS[funcClassPred] <- try(list(variableImportanceRes$importance),silent=TRUE)
+
+	# save results
+	try(save(res, file=outfile),silent=TRUE)
+
+	try(write.table(variableImportanceRes$importance,col.names=TRUE, row.names=TRUE, quote=FALSE, sep="\t", file=outfileImp))
+
+      } else if(class(variableImportanceRes)!="try-error"){
+
+	    yPred <- try(predict(res,xTest),silent=TRUE)
+
+	  if(class(yPred)!="try-error"){
+
+	    variableImportanceRes <- try(filterVarImp(xTest,yPred,nonpara=TRUE),silent=TRUE)
+
+	      if(class(variableImportanceRes)!="try-error") {
+
+		resultVarImpListCombCLASS[funcClassPred] <- try(list(variableImportanceRes),silent=TRUE)
+
+		try(write.table(variableImportanceRes,col.names=TRUE, row.names=TRUE, quote=FALSE, sep="\t", file=outfileImp))
+
+	      } else if(class(variableImportanceRes)=="try-error") {
+
+	      print("Predicting variable importance (second try) has failed!")
+	      resultVarImpListCombCLASS[funcClassPred] <- try(list(NA),silent=TRUE)
+
+	  }
+
+	}
+      
+      } else if(class(res)=="try-error"){
+      
+	print("Building model has failed or reached timelimit!")
+	resultVarImpListCombCLASS[funcClassPred] <- try(list(NA),silent=TRUE)
+      }
+      
+  } else {
+  
+  print("Predicting variable importance (third try) has failed!")
+  resultVarImpListCombCLASS[funcClassPred] <- try(list(NA),silent=TRUE)
+  
+  }
+  
+# Last check to get all possible varImp  
+tmpSum <- sum(variableImportanceRes$importance[,1])
+
+  if(tmpSum==0){
+    
+    variableImportanceRes <- try(varImp(res),silent=TRUE)
+    
+    resultVarImpListCombCLASS[funcClassPred] <- try(list(variableImportanceRes$importance),silent=TRUE)
+    
+    try(write.table(variableImportanceRes$importance,col.names=TRUE, row.names=TRUE, quote=FALSE, sep="\t", file=outfileImp))        
   }
 
+  if(class(variableImportanceRes)!="try-error"){
+
+#   Print out variable importance
+#   try(print(variableImportanceRes),silent=TRUE)
+    cat("Variable importance has been calculated!", "\n")
+  
+  } else if(class(variableImportanceRes)=="try-error"){
+  
+  print("Predicting variable importance (fourth try) has failed!")
+  resultVarImpListCombCLASS[funcClassPred] <- try(list(NA),silent=TRUE)
+  
+  }
+
+  if((file.exists(paste(outfile))) || file.exists(outfileImp)){
+#   general check for files RData and VarImp.txt
+    if(((file.exists(paste(outfile)))==FALSE) || (file.exists(outfileImp)==FALSE)){
+      try(file.remove(paste(outfile)))
+      try(file.remove(paste(outfileImp)))
+    } else {
+    
+    print("RData and VarImp.txt files exists!")
+    print("Variable importance:")
+    print(variableImportanceRes)
+   
+    }
+    
+  }
+  
+}  
+  
+
+resultVarImpListCombCLASS[model] <- mclapply(model,classVarPred, mc.preschedule=FALSE, mc.cores=no.cores)
+
+# Return variable importance or NULL
+
+for(i in 1:length(resultVarImpListCombCLASS)){
+  
+  if(class(resultVarImpListCombCLASS[i])=="try-error"){
+    
+    resultVarImpListCombCLASS[i] <- NULL
+    
+  }
+  
 }
 
-resultVarImpListCombCLASS[model] <- mclapply(model,regVarPred, mc.preschedule=FALSE, mc.cores=no.cores)
 
 return(resultVarImpListCombCLASS)
 
 }
-
-# 
-# Code block prepared to impement Class variable importance
-# 
-# pre-ALPHA VERSION!
-# 
-# Code block prepared to impement Class variable importance
-# 

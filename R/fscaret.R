@@ -97,7 +97,11 @@ definedModels <- Used.funcRegPred
 
 }
 
-}
+} else if(is.null(regPred)){
+  
+  regPred <- FALSE
+  
+} 
 
 # 
 # Code block prepared to impement regClass variable importance
@@ -120,7 +124,11 @@ definedModels <- Used.funcClassPred
 
 }
 
-}
+} else if(is.null(classPred)){
+  
+  classPred <- FALSE
+  
+} 
 
 # 
 # Code block prepared to impement regClass variable importance
@@ -153,6 +161,11 @@ if(mySystem!="windows"){
 no.cores <- 1
 
 }
+
+
+
+
+if(regPred==TRUE){
 # Scan dimensions of trainDF [lk_row x lk_col]
 lk_col = ncol(trainDF)
 lk_row = nrow(trainDF)
@@ -188,7 +201,33 @@ for(col in 1:(lk_col_test)) {
    for(row in 1:(lk_row_test)) {
      testMatryca_nr[row,col] <- (as.double(testDF[row,col]))
     }
+  }
+
 }
+
+if(classPred==TRUE){
+
+# Scan dimensions of trainDF [lk_row x lk_col]
+lk_col = ncol(trainDF)
+lk_row = nrow(trainDF)
+
+# Read labels of trainDF
+labelsFrame <- as.data.frame(colnames(trainDF[1:(ncol(trainDF)-1)]))
+
+# Create a train data set matrix
+trainMatryca_nr <- trainDF
+colnames(trainMatryca_nr) <- colnames(trainDF)
+
+# Scan dimensions of trainDF [lk_row x lk_col]
+lk_col_test = ncol(testDF)
+lk_row_test = nrow(testDF)
+
+testMatryca_nr <- testDF
+colnames(testMatryca_nr) <- colnames(testDF)
+
+}
+
+
 
 # Check for missing data
 if(!is.null(missData)){
@@ -321,9 +360,17 @@ for(col in 1:(lk_col_test)) {
     }
 }
 
-labelsFrame <- as.data.frame(preprocessRes$labelsDF[,ncol(preprocessRes$labelsDF)])
+labelsFrame <- as.data.frame(preprocessRes$labelsDF)
 
-}
+} else if(preprocessData==FALSE){
+  
+  orig_input_no <- data.frame("Orig_labels"=c(1:(lk_col-1)))
+  exportlabelsFrame <- data.frame(orig_input_no,labelsFrame[,1])
+  colnames(exportlabelsFrame)<-c("Orig Input No","Labels")
+  
+  labelsFrame <- as.data.frame(exportlabelsFrame)
+  
+  }
 
 
 # Engine for regression
@@ -351,7 +398,7 @@ print("You haven't chosen impCalcMet, so no variable importance calculations wer
 
 } else if((!is.null(impCalcMet))&&((impCalcMet=="RMSE")||(impCalcMet=="MSE")||(impCalcMet=="RMSE&MSE"))){
 
-impCalcRES <- impCalc(skel_outfile, xTest, yTest, lk_col,labelsFrame, with.labels)
+impCalcRES <- impCalc(skel_outfile, xTest, yTest, lk_col,labelsFrame, with.labels, regPred, classPred)
 
 }
 
@@ -396,15 +443,13 @@ print("You haven't chosen impCalcMet, so no variable importance calculations wer
 
 } else if((!is.null(impCalcMet))&&((impCalcMet=="RMSE")||(impCalcMet=="MSE")||(impCalcMet=="RMSE&MSE"))){
 
-impCalcRES <- try(impCalc(skel_outfile, xTest, yTest, lk_col,labelsFrame, with.labels))
+impCalcRES <- try(impCalc(skel_outfile, xTest, yTest, lk_col,labelsFrame, with.labels, regPred, classPred))
 
 if(class(impCalcRES)=="try-error"){
 
 print("Importance scaling failed, please be advised this functionality is pre-alpha!")
 
 }
-
-impCalcRES <- NA
 
 }
 

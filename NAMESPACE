@@ -1,5 +1,5 @@
 exportPattern("^[[:alpha:]]+")
-import(parallel, gsubfn, caret)
+import(parallel, gsubfn, caret, hmeasure)
 export(classVarImp,
 	dataPreprocess,
 	fscaret,

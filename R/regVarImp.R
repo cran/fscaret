@@ -68,7 +68,7 @@ resultVarImpListCombREG[funcRegPred] <- try(list(variableImportanceRes),silent=T
       cat("",funcRegPred,"\n")
       cat("----------------------------------------\n")
       cat("Elapsed time: ",timer2,"\n")
-      cat("Variable importance: \n")
+#       cat("Variable importance: \n")
 
 if((class(res) != "try-error")&&(class(variableImportanceRes) != "try-error")){
 
@@ -168,11 +168,25 @@ try(write.table(variableImportanceRes, col.names=TRUE, row.names=TRUE, quote=FAL
   resultVarImpListCombREG[funcRegPred] <- try(list(NA),silent=TRUE)
   
   }
+
+  # Last check to get all possible varImp  
+    tmpSum <- sum(variableImportanceRes[,1])
+
+  if(tmpSum == 0){
+  
+    variableImportanceRes <- try(varImp(res),silent=TRUE)
+  
+    resultVarImpListCombREG[funcRegPred] <- try(list(variableImportanceRes$importance),silent=TRUE)
+  
+    try(write.table(variableImportanceRes$importance,col.names=TRUE, row.names=TRUE, quote=FALSE, sep="\t", file=outfileImp))        
+  }
+
   
   if(class(variableImportanceRes)!="try-error"){
 
   # Print out variable importance
-  try(print(variableImportanceRes),silent=TRUE)
+  #   try(print(variableImportanceRes),silent=TRUE)
+  cat("Variable importance has been calculated! \n")
   
   } else if(class(variableImportanceRes)=="try-error"){
   
@@ -189,23 +203,32 @@ try(write.table(variableImportanceRes, col.names=TRUE, row.names=TRUE, quote=FAL
     } else {
     
     print("RData and VarImp.txt files exists!")
-    
-#     # save results
-#     try(save(res, file=outfile),silent=TRUE)
-#     resultVarImpListCombREG[funcRegPred] <- try(list(variableImportanceRes),silent=TRUE)
-#     try(write.table(variableImportanceRes,col.names=TRUE, row.names=TRUE, quote=FALSE, sep="\t", file=outfileImp))
+    cat("Variable importance: \n")
+    try(print(variableImportanceRes),silent=TRUE)
     
     }
     
   }
-  
-  
+    
 }
 
 
 
 
 resultVarImpListCombREG[model] <- mclapply(model,regVarPred, mc.preschedule=FALSE, mc.cores=no.cores)
+
+# Return variable importance or NULL
+
+for(i in 1:length(resultVarImpListCombREG)){
+  
+  if(class(resultVarImpListCombREG[i])=="try-error"){
+    
+    resultVarImpListCombREG[i] <- NULL
+    
+  }
+  
+}
+
 
 return(resultVarImpListCombREG)
 

@@ -9,7 +9,7 @@ It also stores the raw MSE and RMSE derived from models. impCalc function should
 user has trained models from caret package in RData files.
 }
 \usage{
-impCalc(skel_outfile, xTest, yTest, lk_col,labelsFrame,with.labels)
+impCalc(skel_outfile, xTest, yTest, lk_col,labelsFrame,with.labels,regPred,classPred)
 }
 \arguments{
   \item{skel_outfile}{
@@ -29,6 +29,12 @@ Labels to sort variable importance
 }
 \item{with.labels}{
 Pass with.labels argument. It is advised to ALWAYS use labels as in some cases VarImp returns importance in descending values. If you insist turning with.labels FALSE, then make sure data base contains pure data and you read it (read.csv) to data.frame with option header=FALSE. 
+}
+\item{regPred}{
+Indicating if regression predictions are computed. Possible values TRUE/FALSE. If regPred is set TRUE, then classPred should be set FALSE. 
+}
+\item{classPred}{
+Indicating if classification predictions are computed. Possible values TRUE/FALSE. If classPred is set TRUE, then regPred should be set FALSE. Please be advised that importance is scaled according to F-measure. 
 }
 }
 \details{
@@ -64,7 +70,8 @@ supress.output <- TRUE
 skel_outfile <- paste("_default_",sep="")
 mySystem <- .Platform$OS.type
 with.labels <- TRUE
-
+redPred <- TRUE
+classPred <- FALSE
 
 if(mySystem=="windows"){
 no.cores <- 1
@@ -76,7 +83,7 @@ lk_row = nrow(trainDF)
 
 # Read labels of trainDF
 labelsFrame <- as.data.frame(colnames(trainDF))
-
+labelsFrame <-cbind(c(1:ncol(trainDF)),labelsFrame)
 # Create a train data set matrix
 trainMatryca_nr <- matrix(data=NA,nrow=lk_row,ncol=lk_col)
 
@@ -120,7 +127,7 @@ myVarImp <- regVarImp(model, xTrain, yTrain, xTest,
 	    supress.output, mySystem)
 
 
-myImpCalc <- impCalc(skel_outfile, xTest, yTest, lk_col,labelsFrame,with.labels)
+myImpCalc <- impCalc(skel_outfile, xTest, yTest, lk_col,labelsFrame,with.labels,redPred,classPred)
 
 }
 \keyword{ design }

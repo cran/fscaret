@@ -2,6 +2,17 @@
 \title{News for Package \pkg{fscaret}}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
+\section{Changes in version 0.9}{
+\itemize{
+
+\item New component is available regarding classification problems.
+\item Few minor code blocks were rewrited.
+
+}
+
+}
+
+
 \section{Changes in version 0.8.6.3}{
 \itemize{
 

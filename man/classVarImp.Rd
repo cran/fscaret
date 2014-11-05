@@ -19,7 +19,7 @@ Chosed models as called from function fscaret(), argument Used.funcClassPred.
 Training data set, data frame of input vector
 }
   \item{yTrain}{
-Training data set, vector of observed outputs
+Training data set, vector of observed outputs, must be in binary form 0/1.
 }
   \item{xTest}{
 Testing data set, data frame of input vector
@@ -49,17 +49,5 @@ Kuhn M. (2008) Building Predictive Models in R Using the caret Package \emph{Jou
 \author{
 Jakub Szlek and Aleksander Mendyk
 }
-\examples{
-
-# 
-# Code block prepared to impement Class variable importance
-# 
-# pre-ALPHA VERSION!
-# 
-# Code block prepared to impement Class variable importance
-# 
-
-}
-
 \keyword{ models }
 \keyword{ robust }

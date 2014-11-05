@@ -30,7 +30,7 @@ If TRUE data preprocessing is performed prior to modeling
 If TRUE header of the input files are read
 }
   \item{classPred}{
-If TRUE classification models are applied (for v0.8 it is not available)
+If TRUE classification models are applied. Please be advised that importance is scaled according to F-measure regardless impCalcMet settings.
 }
   \item{regPred}{
 If TRUE regression models are applied
