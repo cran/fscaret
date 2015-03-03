@@ -9,22 +9,23 @@ This package provide fast and automated feature selection based on caret package
 The main advantage of this extension is that it requires minimum user involvement.
 Also the variety of used methods in combination with the scaling according to RMSE or MSE obtained from models profit the user.
 The idea is based on the assumption that the variety of models will balance the roughness of calculations (default model settings are applied).
-On Windows OS the time limiting function is off also the number of cores used is set to 1.
+On Windows OS the time limiting function is off, multicore functionalaity is enabled via parLapply() function of package 'parallel'.
+Acknowledgments:\cr
+This work was funded by Poland-Singapore bilateral cooperation project no 2/3/POL-SIN/2012\cr
 }
 \details{
 \tabular{ll}{
 Package: \tab fscaret\cr
 Type: \tab Package\cr
-Version: \tab 0.8.6.3\cr
-Date: \tab 2014-10-5\cr
+Version: \tab 0.9.3\cr
+Date: \tab 2015-03-3\cr
 License: \tab GPL-2 | GPL-3\cr
 }
 }
 \author{
-Jakub Szlek <j.szlek@uj.edu.pl>, acknowledgments to Aleksander Mendyk, contributions from stackoverflow and r-help@r-project.org mailing list community.\cr
+Jakub Szlek <j.szlek@uj.edu.pl>
+Contributions from Aleksander Mendyk, also stackoverflow and r-help@r-project.org mailing list community.\cr
 Maintainer: Jakub Szlek <j.szlek@uj.edu.pl>.\cr
-Acknowledgments:\cr
-This work was funded by Poland-Singapore bilateral cooperation project no 2/3/POL-SIN/2012\cr
 }
 \references{
 Kuhn M. (2008) Building Predictive Models in R Using the caret Package \emph{Journal of Statistical Software} \bold{28(5)} \url{http://www.jstatsoft.org/}.\cr

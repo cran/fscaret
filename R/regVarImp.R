@@ -32,13 +32,12 @@ if(mySystem!="windows"){
 
     # Supress output
     sink("/dev/null")
-    res <- invisible(try(timeout(train(xTrain,yTrain, method=funcRegPred, trControl=fitControlSet),seconds=myTimeLimitSet,my.pid=Sys.getpid()),silent=TRUE))
+      res <- invisible(try(timeout(train(xTrain,yTrain, method=funcRegPred, trControl=fitControlSet),seconds=myTimeLimitSet),silent=TRUE))
     sink()
 
     } else {
 
-    res <- try(timeout(train(xTrain,yTrain, method=funcRegPred, trControl=fitControlSet),seconds=myTimeLimitSet,my.pid=Sys.getpid()),silent=TRUE)
-
+      res <- invisible(try(timeout(train(xTrain,yTrain, method=funcRegPred, trControl=fitControlSet),seconds=myTimeLimitSet),silent=TRUE))
     }
     
 } else {
@@ -213,9 +212,37 @@ try(write.table(variableImportanceRes, col.names=TRUE, row.names=TRUE, quote=FAL
 }
 
 
+# resultVarImpListCombREG[model] <- mclapply(model,regVarPred, mc.preschedule=TRUE, mc.cores=no.cores, mc.set.seed=TRUE, mc.cleanup=TRUE, mc.allow.recursive=TRUE)
 
+if (Sys.info()[1] == "Windows"){
 
-resultVarImpListCombREG[model] <- mclapply(model,regVarPred, mc.preschedule=FALSE, mc.cores=no.cores)
+# Windows parallel implementation
+
+# Spawn child processes using fork()
+cl <- makeCluster(no.cores)
+
+# Export objects to the cluster
+clusterExport(
+              cl=cl, 
+              varlist=c("myTimeLimitSet", "fitControlSet", "lk_col", "supress.output",
+                        "mySystem", "no.cores", "xTrain","yTrain", "funcRegPred", "fitControlSet")
+              ,envir=environment())
+
+# Run function
+resultVarImpListCombREG[model] <- parLapply(cl, model, regVarPred)
+
+# Stop cluster and kill child processes
+stopCluster(cl)
+
+} else {
+  
+# POSIX OS parallel implementation  
+  resultVarImpListCombREG[model] <- mclapply(model,regVarPred,
+                                             mc.preschedule=FALSE, mc.cores=no.cores, mc.cleanup=FALSE)  
+  
+  
+}
+
 
 # Return variable importance or NULL
 

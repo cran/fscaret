@@ -16,6 +16,7 @@ returnResampSet <- returnResamp
 fitControl <- trainControl(method = methodSet, returnResamp = returnResampSet, ...)
 no.cores<-no.cores
 
+
 # Get working dir
 mywd <- getwd()
 
@@ -30,6 +31,8 @@ options(java.parameters="-Xrs")
 
 options(warn=-1)
 
+# prevent gsubfn from loading tckl which causes problem with mclapply
+options(gsubfn.engine = "R")
 		  
 if(installReqPckg==TRUE){
 

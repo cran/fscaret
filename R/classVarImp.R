@@ -33,12 +33,12 @@ if(mySystem!="windows"){
 
     # Supress output
     sink("/dev/null")
-    res <- invisible(try(timeout(train(xTrain,yTrain, method=funcClassPred, trControl=fitControlSet),seconds=myTimeLimitSet,my.pid=Sys.getpid()),silent=TRUE))
+    res <- invisible(try(timeout(train(xTrain,yTrain, method=funcClassPred, trControl=fitControlSet),seconds=myTimeLimitSet),silent=TRUE))
     sink()
 
     } else {
 
-    res <- try(timeout(train(xTrain,yTrain, method=funcClassPred, trControl=fitControlSet),seconds=myTimeLimitSet,my.pid=Sys.getpid()),silent=TRUE)
+    res <- try(timeout(train(xTrain,yTrain, method=funcClassPred, trControl=fitControlSet),seconds=myTimeLimitSet),silent=TRUE)
 
     }
     
@@ -211,9 +211,36 @@ tmpSum <- sum(variableImportanceRes$importance[,1])
   }
   
 }  
-  
 
-resultVarImpListCombCLASS[model] <- mclapply(model,classVarPred, mc.preschedule=FALSE, mc.cores=no.cores)
+if (Sys.info()[1] == "Windows"){
+  
+  # Windows parallel implementation
+  
+  # Spawn child processes using fork()
+  cl <- makeCluster(no.cores)
+  
+  # Export objects to the cluster
+  clusterExport(
+    cl=cl, 
+    varlist=c("myTimeLimitSet", "fitControlSet", "lk_col", "supress.output",
+              "mySystem", "no.cores", "xTrain","yTrain", "funcClassPred", "fitControlSet")
+    ,envir=environment())
+  
+  # Run function
+  resultVarImpListCombCLASS[model] <- parLapply(cl, model, classVarPred)
+  
+  # Stop cluster and kill child processes
+  stopCluster(cl)
+  
+} else {
+  
+  # POSIX OS parallel implementation  
+  resultVarImpListCombCLASS[model] <- mclapply(model,classVarPred,
+                                               mc.preschedule=FALSE, mc.cores=no.cores, mc.cleanup=FALSE)
+  
+  
+}
+
 
 # Return variable importance or NULL
 

@@ -2,6 +2,16 @@
 \title{News for Package \pkg{fscaret}}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
+\section{Changes in version 0.9.3}{
+\itemize{
+
+\item Multicore functionality now available on Windows OS.
+\item Function timeout() was rewritten due to multiple errors occurence of killed fork processes
+}
+
+}
+
+
 \section{Changes in version 0.9}{
 \itemize{
 

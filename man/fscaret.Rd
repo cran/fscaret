@@ -48,7 +48,7 @@ Time limit in seconds for single model development
 Vector of regression models to be used, for all available models please enter Used.funcRegPred="all"
 }
   \item{Used.funcClassPred}{
-Vector of classification models to be used (for v0.8 it is not available)
+Vector of classification models to be used, for all available models please enter Used.funcClassPred="all"
 }
   \item{no.cores}{
 Number of cores to be used for modeling, if NULL all available cores are used, should be numeric type or NULL
@@ -100,7 +100,7 @@ mySystem <- .Platform$OS.type
 
 if(mySystem=="windows"){
 
-myCores <- 1
+myCores <- 2
 
 } else {
 

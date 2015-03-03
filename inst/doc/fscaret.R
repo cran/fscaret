@@ -120,7 +120,9 @@ myRES_PPlabels <- myFS$PPlabels
 ## 
 ## myDF <- Pima.te
 ## 
-## myFS.class<-fscaret(myDF, myDF, myTimeLimit = 5, preprocessData=FALSE, with.labels=TRUE, classPred=TRUE,regPred=FALSE, Used.funcClassPred=c("knn","rpart"), supress.output=TRUE, no.cores=1)
+## myFS.class<-fscaret(myDF, myDF, myTimeLimit = 5, preprocessData=FALSE,
+## 		    with.labels=TRUE, classPred=TRUE,regPred=FALSE, 
+## 		    Used.funcClassPred=c("knn","rpart"), supress.output=TRUE, no.cores=1)
 ## myRES.class_tab <- myFS.class$VarImp$matrixVarImp.MeasureError
 ## myRES.class_tab <- subset(myRES.class_tab, select=c("knn","rpart","SUM%","ImpGrad","Input_no"))
 ## myRES.class_rawError <- myFS.class$VarImp$rawMeasureError

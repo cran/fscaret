@@ -204,7 +204,7 @@ data(funcClassPred)
 funcClassPred
 @
 
-\item \code{no.cores} The default setting is \code{NULL} as to maximize the CPU utilization and to use all available cores. This option is off for Windows OS.
+\item \code{no.cores} The default setting is \code{NULL} as to maximize the CPU utilization and to use all available cores.
 \item \code{missData} This option handles the missing data. Possible values are:
     \begin{itemize}
     \item \code{missData="delRow"} - for deletion of observations (rows) with missing values,
@@ -285,7 +285,9 @@ Pima.te[,8] <- as.numeric(Pima.te[,8])-1
 
 myDF <- Pima.te
 
-myFS.class<-fscaret(myDF, myDF, myTimeLimit = 5, preprocessData=FALSE, with.labels=TRUE, classPred=TRUE,regPred=FALSE, Used.funcClassPred=c("knn","rpart"), supress.output=TRUE, no.cores=1)
+myFS.class<-fscaret(myDF, myDF, myTimeLimit = 5, preprocessData=FALSE,
+		    with.labels=TRUE, classPred=TRUE,regPred=FALSE, 
+		    Used.funcClassPred=c("knn","rpart"), supress.output=TRUE, no.cores=1)
 myRES.class_tab <- myFS.class$VarImp$matrixVarImp.MeasureError
 myRES.class_tab <- subset(myRES.class_tab, select=c("knn","rpart","SUM%","ImpGrad","Input_no"))
 myRES.class_rawError <- myFS.class$VarImp$rawMeasureError
