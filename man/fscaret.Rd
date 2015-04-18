@@ -11,7 +11,7 @@ fscaret(trainDF, testDF, installReqPckg = FALSE, preprocessData = FALSE,
 	with.labels = TRUE, classPred = FALSE, regPred = TRUE, skel_outfile = NULL,
 	impCalcMet = "RMSE&MSE", myTimeLimit = 24 * 60 * 60, Used.funcRegPred = NULL,
 	Used.funcClassPred = NULL, no.cores = NULL, method = "boot", returnResamp = "all",
-	missData=NULL, supress.output=FALSE, ...)
+	missData=NULL, supress.output=FALSE, saveModel=FALSE, ...)
 }
 \arguments{
   \item{trainDF}{
@@ -65,16 +65,20 @@ Handling of missing data values. Possible values: "delRow" - delete observations
 \item{supress.output}{
 If TRUE output of modeling phase by caret functions are supressed. Only info which model is currently calculated and resulting variable importance.
 }
+\item{saveModel}{
+Logical value [TRUE/FALSE] if trained model should be embedded in final model.
+}
   \item{\dots}{
 Additional arguments, preferably passed to fitControl of caret package
 }
 }
 \value{
 \item{$ModelPred}{List of outputs from caret model fitting}
-\item{$VarImp}{Data frames of variable importance}
+\item{$VarImp}{Data frames of variable importance and corresponding trained models}
 \item{$PPlabels}{Data frame of resulting preprocessed data set with original input numbers and names}
 \item{$PPTrainDF}{Training data set after preprocessing}
 \item{$PPTestDF}{Testing data set after preprocessing}
+\item{$VarImp$model}{Trained models}
 }
 \references{
 Kuhn M. (2008) Building Predictive Models in R Using the caret Package \emph{Journal of Statistical Software} \bold{28(5)} \url{http://www.jstatsoft.org/}.
@@ -87,6 +91,8 @@ Jakub Szlek and Aleksander Mendyk
 }
 
 \examples{
+
+if((Sys.info()['sysname'])!="SunOS"){
 
 library(fscaret)
 
@@ -114,7 +120,7 @@ myFirstRES <- fscaret(dataset.train, dataset.test, installReqPckg=FALSE,
                   impCalcMet="RMSE&MSE", myTimeLimit=5,
                   Used.funcRegPred=c("lm","pls","pcr"), Used.funcClassPred=NULL,
                   no.cores=myCores, method="boot", returnResamp="all",
-                  supress.output=TRUE)
+                  supress.output=TRUE,saveModel=FALSE)
 
 # Training data set after preprocessing
 myFirstRES$PPTrainDF
@@ -133,6 +139,7 @@ myFirstRES$VarImp
 
 # Reduced input vector (data set) after preprocessing
 myFirstRES$PPlabels
+}
 
 }
 

@@ -3,6 +3,9 @@ regVarImp <- function(model, xTrain, yTrain, xTest, fitControl, myTimeLimit, no.
 resultVarImpListCombREG <- NULL
 resultVarImpListCombREG <- list()
 
+regVarImpFuncRES <- NULL
+regVarImpFuncRES <- list()
+
 myTimeLimitSet <- myTimeLimit
 fitControlSet <- fitControl
 lk_col <- lk_col
@@ -208,7 +211,7 @@ try(write.table(variableImportanceRes, col.names=TRUE, row.names=TRUE, quote=FAL
     }
     
   }
-    
+  
 }
 
 
@@ -255,7 +258,6 @@ for(i in 1:length(resultVarImpListCombREG)){
   }
   
 }
-
 
 return(resultVarImpListCombREG)
 

@@ -92,9 +92,8 @@ install.packages("fscaret", dependencies = c("Depends", "Suggests"))
 @
 
 from R console.\\
-{\color{darkred}\\Be adivsed! Running above code would install all possible packages (in some cases more than 240!), but it is necessary to
-fully benefit from fscaret. If you wish to use only specific algorithms, check which parameter from \code{funcRegPred} corresponds to which package.\\
-\\In second case install \pkg{fscaret} with the command
+{\color{darkred}\\Be adivsed! Running above code would install all possible packages (in some cases more than 240!), but it is necessary to fully benefit from fscaret. If you wish to use only specific algorithms, check which parameter from \code{funcRegPred} corresponds to which package.\\
+\\In the second case install \pkg{fscaret} with the command
 
 <<install, eval = FALSE>>=
 install.packages("fscaret", dependencies = c("Depends"))
@@ -105,9 +104,9 @@ install.packages("fscaret", dependencies = c("Depends"))
 \section{ Overview }
 
 In general \pkg{fscaret} is a wrapper module. It uses the engine of \pkg{caret} to build models and to get the variable ranking from them.
-When models are build package tries to draw variable importance from them also getting the generalization error (RMSE and MSE) which is used during
-the scaling process. Finally the output is produced. It contains the data frame of variable importance, generalization error for all build models and
-preprocessed data set if the \code{preprocessData = TRUE} when calling the main \code{fscaret()} function.\\
+When models are build package tries to draw variable importance from them directly or indirectly. The raw feature ranking would be worthless, since the results in this form cannot be compared.\\
+That is why within \pkg{fscaret} the scaling process was introduced. Developed models are used to get prediction errors (RMSE and MSE). Finally the output is produced. It contains the data frame of variable importance, errors for all build models and
+preprocessed data set if the \code{preprocessData = TRUE} when calling the main \code{fscaret()} function. Also is possible to retrive the original models build with \code{train()} function of \pkg{caret}, to do this you should set \code{saveModel=TRUE} in the call of \code{fscaret} function.\\
 \\In summary the whole feature ranking process can be divided into:
 \begin{enumerate}
 \item User provides input data sets and a few settings
@@ -134,11 +133,11 @@ Input\_no1 & Input\_no2 & Input\_no3 & \ldots & Output \\
 \end{tabular}
 
 For more information on reading files in R, please write \code{?read.csv} in R console.
-If \code{fscaret()} function is switched to \code{classPred=TRUE}, than output must be in binary format (0/1).
+If \code{fscaret()} function is switched to \code{classPred=TRUE}, the output must be in binary format (0/1).
 
 \subsection{An example}
 \label{firstEx}
-There are planty of methods to introduce data sets into R. The best way is to read file (presumably csv with \texttt{tab} as column separator) as follows:
+There are plenty of methods to introduce data sets into R. The best way is to read file (preasumably csv with \texttt{tab} as column separator) as follows:
 
 
 \begin{enumerate}
@@ -161,7 +160,8 @@ matrixTrain <- as.data.frame(matrixTrain)
 @
 \end{enumerate}
 
-Be advised to use \code{header=TRUE} when you have data set with column names as first row and \code{header=FALSE} when there are no column names.
+Be advised to use \code{header=TRUE} when you have data set with column names as first row and \code{header=FALSE} when there are no column names.\\
+Starting from \pkg{fscaret} version 0.9 setting \code{header} is fixed to \code{TRUE}.\\ 
 The last step is obligatory to introduce data into \pkg{fscaret} functions as it checks if the data presented is in \code{data.frame} format.
 \section{ Function \code{fscaret()}}
 \subsection{Settings}
@@ -213,12 +213,18 @@ funcClassPred
     \item \code{missData=NULL} - no action is taken.
     \end{itemize}
 \item \code{supress.output} Default option is \code{FALSE}, but it is sometimes justifed to supress the output of intermediate functions and focus on ranking predictions.
+\item \code{saveModel} Default option is \code{FALSE} as some models have large size, and therefore saving all obtained would lead to 100-500 MB RData files. Keep in mind that loading such large objects into R would require a lot of RAM, e.g. 140MB RData file consumes about 1.5GB of RAM. On the other hand one may want to utilize developed models.\\ To export a model from a result of \code{fscaret()} function, e.g. \code{myFS} object:
+<<fscaret_example, eval = FALSE>>=
+my_res_foba <- myFS$VarImp$model$foba
+my_res_foba <- structure(my_res_foba,class="train")
+@
 \end{itemize}
 
 \subsection{Regression problems - an example}
 A simple example of regression problem utilizing the data provided in the \pkg{fscaret}:
 
 <<fscaret_example, eval = FALSE>>=
+
 library(fscaret)
 data(dataset.train)
 data(dataset.test)
@@ -237,19 +243,61 @@ myRES_PPlabels <- myFS$PPlabels
 
 <<fscaret_example, echo = FALSE, results = hide>>=
 library(fscaret)
-data(dataset.train)
-data(dataset.test)
 
-trainDF <- dataset.train
-testDF <- dataset.test
+# if((Sys.info()['sysname'])=="SunOS"){
+myRES_tab <- data.frame(pcr = c(5.862841e+01, 1.567799e+01, 1.916511e+01, 2.519981e-01, 1.872058e-02, 
+				2.880832e-04, 5.880416e-04, 7.190168e-05, 1.570926e-06, 1.081909e-06),
+                        pls = c(5.227714e+01, 2.741963e+01, 1.995465e+01, 3.161112e-01, 3.079973e-02, 
+				1.324904e-03, 2.781880e-04, 6.894892e-05, 2.697715e-06, 1.078743e-06),
+                        "SUM" = c(1.000000e+02, 3.885975e+01, 3.527303e+01, 5.122461e-01, 4.465089e-02, 
+				1.454379e-03, 7.810516e-04, 1.270005e-04, 3.848898e-06, 1.948191e-06),
+			ImpGrad=c(0.000000, 61.140253, 9.229896, 98.547769, 91.283313, 96.742777, 46.296556, 
+				  83.739807, 96.969384, 49.383143),
+			Input_no=c("4","5","22","23","2","13","9","1","17","21"))
+names(myRES_tab)[length(myRES_tab)-2]<-"SUM%"			
+			
+myRES_rawMSE <- data.frame(pcr = c(716.6597),
+			  pls = c(671.8195))
+			  
+myRES_PPlabels <- data.frame("Orig Input No"=c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 
+						14, 15, 16, 17, 18, 19, 20, 22, 23, 24, 25, 26, 
+						27, 29),
+			      Labels = c("Balaban.index", "Dreiding.energy", 
+					  "Fused.aromatic.ring.count", "Hyper.wiener.index", 
+					  "Szeged.index", "Ring.count.of.atom", 
+					  "pI", "Quaternary_structure", 
+					  "PLGA_Mw", "La_to_Gly", 
+					  "PVA_conc_inner_phase", "PVA_conc_outer_phase", 
+					  "PVA_Mw", "Inner_phase_volume", 
+					  "Encaps_rate", "PLGA_conc", 
+					  "PLGA_to_Placticizer", "diss_pH", 
+					  "diss_add", "Prod_method", 
+					  "Asymmetric.atom.count.1", "Hyper.wiener.index.1", 
+					  "Szeged.index.1", "count", 
+					  "pH_14_logd", "bpKa2", 
+					  "Cyclomatic.number.2"))
+			            
+# } else {
 
-myFS<-fscaret(trainDF, testDF, myTimeLimit = 5, preprocessData=TRUE,regPred=TRUE,
-	      Used.funcRegPred=c("pcr","pls"), with.labels=TRUE,
-	      supress.output=TRUE, no.cores=1)
-myRES_tab <- myFS$VarImp$matrixVarImp.MSE[1:10,]
+# data(dataset.train)
+# data(dataset.test)
+
+# trainDF <- dataset.train
+# testDF <- dataset.test
+
+# myFS<-fscaret(trainDF, testDF, myTimeLimit = 5, preprocessData=TRUE,regPred=TRUE,
+#	      Used.funcRegPred=c("pcr","pls"), with.labels=TRUE,
+#	      supress.output=TRUE, no.cores=1, saveModel=FALSE)
+
+# myRES_tab <- myFS$VarImp$matrixVarImp.MSE[1:10,]
+
+# myRES_rawMSE <- myFS$VarImp$rawMSE
+# myRES_PPlabels <- myFS$PPlabels
+
+# }
+
 myRES_tab <- subset(myRES_tab, select=c("pcr","pls","SUM%","ImpGrad","Input_no"))
-myRES_rawMSE <- myFS$VarImp$rawMSE
-myRES_PPlabels <- myFS$PPlabels
+
 @
 
 <<fscaret_example_class, echo = FALSE, results = hide>>=
@@ -300,18 +348,19 @@ For regression problems, as it was stated previously there are three lists of ou
 \begin{enumerate}
 \item Feature ranking and generalization errors for models:
 
-<<fscaret_example, results = hide>>=
+<<fscaret_example>>=
 # Print out the Variable importance results for MSE scaling
 print(myRES_tab)
 @
 
-\item Raw generalization errors for each model
-<<fscaret_example, results = hide>>=
+\item Raw RMSE/MSE errors for each model
+<<fscaret_example>>=
 # Print out the generalization error for models
 print(myRES_rawMSE)
 @
 
-<<fscaret_example, results = hide>>=
+\item Reduced data frame of inputs after preprocessing 
+<<fscaret_example>>=
 # Print out the reduced number of inputs after preprocessing
 print(myRES_PPlabels)
 @
@@ -329,13 +378,20 @@ a=0.9
 b=0.7
 c=2
 
+# if((Sys.info()['sysname'])=="SunOS"){
+myFS <- NULL
+myFS$VarImp$matrixVarImp.MSE <- myRES_tab
+
+# }
+
+
 lk_row.mse=nrow(myFS$VarImp$matrixVarImp.MSE)
 
 setEPS()
 
 barplot1 <- barplot(myFS$VarImp$matrixVarImp.MSE$"SUM%"[1:(a*lk_row.mse)],
 	    cex.names=b, las = c, xlab="Variables", ylab="Importance Sum%",
-	    names.arg=c(rownames(myFS$VarImp$matrixVarImp.MSE)[1:(a*lk_row.mse)]))
+	    names.arg=c(myFS$VarImp$matrixVarImp.MSE$Input_no[1:(a*lk_row.mse)]))
 	    
 lines(x = barplot1, y = myFS$VarImp$matrixVarImp.MSE$"SUM%"[1:(a*lk_row.mse)])
 points(x = barplot1, y = myFS$VarImp$matrixVarImp.MSE$"SUM%"[1:(a*lk_row.mse)])
@@ -367,6 +423,23 @@ print(myRES.class_rawError)
 
 As one can see in the example there were only two models used \code{"knn","rpart"}, to use all available models please set option \code{Used.funcClassPred="all"}.
 The results can be presented on a bar plot as the previous ones. Then the arbitrary feature reduction can be applied.
+
+\section{Known issues}
+\begin{enumerate}
+\item In some cases during model development stage users can encounter "caught segfault" errors. It is highly depenent on the input data and the model. The nature of the error prevents function \code{fscaret()} returning proper results, therefore no scaling of variable importance is done, and no summary of feature ranking is presented.\\The way around is to exclude the troublesome method from calculations. If you encounter an odd behaviour of your working script, e.g. results of an object \code{myFS} in \code{VarImp} is an empty \code{list()}, search for "segfault" in a Rout file. In the example given below \code{"partDSA"} is the trouble maker. Then run once again computations.
+<<fscaret_issue, eval = FALSE >>=
+library(fscaret)
+myFuncRegPred <- funcRegPred[which(funcRegPred!="partDSA")]
+
+print(funcRegPred)
+
+myFS<-fscaret(trainDF, testDF, myTimeLimit = 12*60*60, preprocessData=TRUE,regPred=TRUE,
+        Used.funcRegPred=myFuncRegPred, with.labels=TRUE,
+	      supress.output=TRUE, no.cores=NULL, saveModel=FALSE)
+@
+
+\end{enumerate}
+
 \section{Acknowledgments}
 
 This work was funded by Poland-Singapore bilateral cooperation project no 2/3/POL-SIN/2012.
@@ -376,8 +449,9 @@ This work was funded by Poland-Singapore bilateral cooperation project no 2/3/PO
 
 \item Szlek J, Paclawski A, Lau R, Jachowicz R, Mendyk A. Heuristic modeling of macromolecule release from PLGA microspheres. International Journal of Nanomedicine. 2013:8(1); 4601 - 4611.
 \href{http://www.dovepress.com/heuristic-modeling-of-macromolecule-release-from-plga-microspheres-peer-reviewed-article-IJN}{link to webpage}
-\item Szlek, J., Paclawski, A., Lau, R., Jachowicz, R., Mendyk, A. Heuristic modeling of macromolecules release from PLGA microspheres. Conference procedings. Gdansk, May 24-25, 2013.\href{http://www.polgerpharm.gumed.edu.pl/attachment/attachment/20321/AbstractBook_Cover_Corrected.pdf}{Abstract book}
-\item Szlek J., Paclawski A., Lau R., Wisniowska B., Polak S., Jachowicz R., Mendyk A. The fscaret: automated feature ranking package. Under review.
+\item Szlek, J., Paclawski, A., Lau, R., Jachowicz, R., Mendyk, A. Heuristic modeling of macromolecules release from PLGA microspheres. Conference proceedings. Gdansk, May 24-25, 2013.\href{http://www.polgerpharm.gumed.edu.pl/attachment/attachment/20321/AbstractBook_Cover_Corrected.pdf}{Abstract book}
+\item Paclawski A, Szlek J, Lau R, Jachowicz R, Mendyk A. Empirical modeling of the fine particle fraction for carrier-based pulmonary delivery formulations. International Journal of Nanomedicine. 2015:10(1); 801 - 810.
+\href{http://www.dovepress.com/empirical-modeling-of-the-fine-particle-fraction-fornbspcarrier-based--peer-reviewed-article-IJN}{link to webpage}
 
 \end{enumerate}
 

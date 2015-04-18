@@ -11,17 +11,4 @@ Vector of all regression methods used in solving problems by caret
 \format{
 vector
 }
-\examples{
-
-# Load library
-library(fscaret)
-
-# Load data set
-data(funcRegPred)
-
-# Print out object
-funcRegPred
-
-
-}
 \keyword{datasets}

@@ -17,8 +17,8 @@ This work was funded by Poland-Singapore bilateral cooperation project no 2/3/PO
 \tabular{ll}{
 Package: \tab fscaret\cr
 Type: \tab Package\cr
-Version: \tab 0.9.3\cr
-Date: \tab 2015-03-3\cr
+Version: \tab 0.9.4\cr
+Date: \tab 2015-04-19\cr
 License: \tab GPL-2 | GPL-3\cr
 }
 }

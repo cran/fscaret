@@ -4,11 +4,12 @@ fscaret<-function(trainDF, testDF, installReqPckg=FALSE,
 		  impCalcMet="RMSE&MSE", myTimeLimit=24*60*60,
 		  Used.funcRegPred=NULL, Used.funcClassPred=NULL,
 		  no.cores=NULL, method="boot", returnResamp="all",
-		  missData=NULL, supress.output=FALSE, ... ){
+		  missData=NULL, supress.output=FALSE, saveModel=FALSE, ... ){
 
 
 mySystem <- .Platform$OS.type
 regPredRES <- list()
+classPredRES <- list()
 impCalcRES <- list()
 fscaretRES <- list()
 methodSet <- method
@@ -106,10 +107,6 @@ definedModels <- Used.funcRegPred
   
 } 
 
-# 
-# Code block prepared to impement regClass variable importance
-# 
-
 # Set models data set to use in funcClassPred
 if(classPred==TRUE){
 
@@ -133,10 +130,6 @@ definedModels <- Used.funcClassPred
   
 } 
 
-# 
-# Code block prepared to impement regClass variable importance
-# 
-
 # Check for NULL skel_outfile obj
 
 if(is.null(skel_outfile)){
@@ -147,25 +140,34 @@ if(is.null(skel_outfile)){
 
 # Check the number of selected cores - if NULL use all available or set no.cores=1 on Windows
 
-if(mySystem!="windows"){
+if(is.null(no.cores)){
   
-  if(is.null(no.cores)){
+  no.cores<-detectCores()
   
-    no.cores<-detectCores()
-  
-  } else {
+} else {
   
   no.cores <- no.cores
   
-  }
-  
-} else {
-
-no.cores <- 1
-
 }
 
 
+# if(mySystem!="windows"){
+#   
+#   if(is.null(no.cores)){
+#   
+#     no.cores<-detectCores()
+#   
+#   } else {
+#   
+#   no.cores <- no.cores
+#   
+#   }
+#   
+# } else {
+# 
+# no.cores <- 1
+# 
+# }
 
 
 if(regPred==TRUE){
@@ -401,7 +403,7 @@ print("You haven't chosen impCalcMet, so no variable importance calculations wer
 
 } else if((!is.null(impCalcMet))&&((impCalcMet=="RMSE")||(impCalcMet=="MSE")||(impCalcMet=="RMSE&MSE"))){
 
-impCalcRES <- impCalc(skel_outfile, xTest, yTest, lk_col,labelsFrame, with.labels, regPred, classPred)
+impCalcRES <- impCalc(skel_outfile, xTest, yTest, lk_col,labelsFrame, with.labels, regPred, classPred, saveModel)
 
 }
 
@@ -425,10 +427,6 @@ options(warn=-1)
 
 cat("\n-----Warnings have been supressed!----\n")
 
-# 
-# Code block prepared to impement regClass variable importance
-# pre-ALPHA version
-# 
 # # definition of input and output vector
 xTrain <- data.frame(trainMatryca_nr[,-lk_col])
 yTrain <- as.factor(trainMatryca_nr[,lk_col])
@@ -436,7 +434,7 @@ yTrain <- as.factor(trainMatryca_nr[,lk_col])
 xTest <- data.frame(testMatryca_nr[,-lk_col])
 yTest <- as.factor(testMatryca_nr[,lk_col])
 
-regClassRES <- classVarImp(definedModels, xTrain, yTrain, xTest, fitControl,
+classPredRES <- classVarImp(definedModels, xTrain, yTrain, xTest, fitControl,
 			myTimeLimit, no.cores, lk_col, supress.output, mySystem)
 
 			
@@ -446,29 +444,25 @@ print("You haven't chosen impCalcMet, so no variable importance calculations wer
 
 } else if((!is.null(impCalcMet))&&((impCalcMet=="RMSE")||(impCalcMet=="MSE")||(impCalcMet=="RMSE&MSE"))){
 
-impCalcRES <- try(impCalc(skel_outfile, xTest, yTest, lk_col,labelsFrame, with.labels, regPred, classPred))
+impCalcRES <- try(impCalc(skel_outfile, xTest, yTest, lk_col,labelsFrame, with.labels, regPred, classPred, saveModel))
 
 if(class(impCalcRES)=="try-error"){
 
-print("Importance scaling failed, please be advised this functionality is pre-alpha!")
+print("Importance scaling has failed. Please check Rout file. For more information set 'supress.output=FALSE'")
 
 }
 
 }
 
-fscaretRES <- list(ModelPred=regClassRES, VarImp=impCalcRES)
+fscaretRES <- list(ModelPred=classPredRES, VarImp=impCalcRES)
 
 if(preprocessData==TRUE){
   
-  fscaretRES <- list(ModelPred=regClassRES, VarImp=impCalcRES,
+  fscaretRES <- list(ModelPred=classPredRES, VarImp=impCalcRES,
 		      PPlabels=labelsFrame, PPTrainDF=trainDF,
 		      PPTestDF=testDF)
   
 }			
-# 
-# Code block prepared to impement Class variable importance
-# pre-ALPHA version
-# 
 
 }
 # Return to your working dir

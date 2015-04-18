@@ -1,4 +1,4 @@
-impCalc <- function(skel_outfile, xTest, yTest, lk_col, labelsFrame, with.labels, regPred, classPred){
+impCalc <- function(skel_outfile, xTest, yTest, lk_col, labelsFrame, with.labels, regPred, classPred,saveModel){
 # Get RMSE from all .RData files
 
 filesRData <- list.files(pattern = "_default_.*.RData")
@@ -7,6 +7,7 @@ impCalcScaleMSE <- list()
 impCalcScaleF <- list()
 rawMeasure <- list()
 impCalcRes <- list()
+modelRes <- list()
 labelsDF <- as.data.frame(labelsFrame[1:(ncol(xTest)),])
 
 
@@ -40,6 +41,15 @@ print(filesRData[i])
 print("")
 
 nameTmp <- filesRDataCols[i]
+
+# Save model into R obj
+if(saveModel==TRUE){
+      for(k in 1:length(res)){
+        lstName <- names(res[k])
+        modelRes[[res$method]] <- c(modelRes[[res$method]],res[k])
+      
+      }
+}
 
 predTmp <- try(predict(res, xTest),silent=TRUE)
 
@@ -253,7 +263,10 @@ matrycaVarImp.RMSE$Input_no <- rownames(matrycaVarImp.RMSE)
 
 
 
-impCalcRes <- list("rawMSE"=rawMSE, "rawRMSE"=rawRMSE, "matrixVarImp.RMSE"=matrycaVarImp.RMSE, "matrixVarImp.MSE"=matrycaVarImp.MSE)
+impCalcRes <- list("rawMSE"=rawMSE, "rawRMSE"=rawRMSE,
+                   "matrixVarImp.RMSE"=matrycaVarImp.RMSE,
+                   "matrixVarImp.MSE"=matrycaVarImp.MSE,
+                   "model"=modelRes)
 
 }
 
@@ -280,6 +293,16 @@ print(filesRData[i])
 print("")
 
 nameTmp <- filesRDataCols[i]
+
+# Save model into R obj
+if(saveModel==TRUE){
+  for(k in 1:length(res)){
+    lstName <- names(res[k])
+    modelRes[[res$method]] <- c(modelRes[[res$method]],res[k])
+    
+  }
+}
+
 
 predTmp <- try(as.data.frame(predict(res, xTest),silent=TRUE))
 measure.table <- cbind(predTmp,yTest)
@@ -473,7 +496,8 @@ matrycaVarImp.F[rows,ncol(matrycaVarImp.F)] <- (imp1 - imp2)/imp1*100
 # Add importance variables names as last column
 matrycaVarImp.F$Input_no <- rownames(matrycaVarImp.F)
 
-impCalcRes <- list("rawMeasureError"=rawMeasure, "matrixVarImp.MeasureError"=matrycaVarImp.F)
+impCalcRes <- list("rawMeasureError"=rawMeasure, "matrixVarImp.MeasureError"=matrycaVarImp.F,
+                   "model"=modelRes)
 
 }
 

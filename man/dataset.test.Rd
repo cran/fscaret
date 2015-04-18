@@ -47,15 +47,4 @@ Literature survey yielded 68 formulations of PLGA microspheres with protein as a
 \item Brodbeck KJ et al. Sustained release of human growth hormone from PLGA solution depots. Pharm Res. 2009, 16(12), 1825-1829.
 }
 }
-
-\examples{
-
-library(fscaret)
-
-data(dataset.test)
-
-dataset.test
-
-}
-
 \keyword{datasets}

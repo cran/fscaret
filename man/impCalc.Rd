@@ -5,11 +5,12 @@ impCalc
 }
 \description{
 impCalc function is designed to scale variable importance according to MSE and RMSE calculations.
-It also stores the raw MSE and RMSE derived from models. impCalc function shouldn't be used alone unless
-user has trained models from caret package in RData files.
+It also stores the raw MSE, RMSE, F-measure and developed models if saveModel=TRUE. impCalc is low-level function, it shouldn't be used alone unless
+user has trained models from caret package stored in RData files.
 }
 \usage{
-impCalc(skel_outfile, xTest, yTest, lk_col,labelsFrame,with.labels,regPred,classPred)
+impCalc(skel_outfile, xTest, yTest, lk_col, 
+          labelsFrame,with.labels,regPred,classPred,saveModel)
 }
 \arguments{
   \item{skel_outfile}{
@@ -35,6 +36,9 @@ Indicating if regression predictions are computed. Possible values TRUE/FALSE. I
 }
 \item{classPred}{
 Indicating if classification predictions are computed. Possible values TRUE/FALSE. If classPred is set TRUE, then regPred should be set FALSE. Please be advised that importance is scaled according to F-measure. 
+}
+\item{saveModel}{
+Logical value [TRUE/FALSE] if trained model should be embedded in final model.
 }
 }
 \details{
@@ -72,6 +76,7 @@ mySystem <- .Platform$OS.type
 with.labels <- TRUE
 redPred <- TRUE
 classPred <- FALSE
+saveModel <- FALSE
 
 if(mySystem=="windows"){
 no.cores <- 1
@@ -121,13 +126,14 @@ xTest <- data.frame(testMatryca_nr[,-lk_col])
 yTest <- as.vector(testMatryca_nr[,lk_col])
 
 
-# Calling lower function to create models to calculate on
+# Calling low-level function to create models to calculate on
 myVarImp <- regVarImp(model, xTrain, yTrain, xTest,
 	    fitControl, myTimeLimit, no.cores, lk_col,
 	    supress.output, mySystem)
 
 
-myImpCalc <- impCalc(skel_outfile, xTest, yTest, lk_col,labelsFrame,with.labels,redPred,classPred)
+myImpCalc <- impCalc(skel_outfile, xTest, yTest,
+              lk_col,labelsFrame,with.labels,redPred,classPred,saveModel)
 
 }
 \keyword{ design }
