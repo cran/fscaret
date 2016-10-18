@@ -1,4 +1,4 @@
-impCalc <- function(skel_outfile, xTest, yTest, lk_col, labelsFrame, with.labels, regPred, classPred,saveModel){
+impCalc <- function(skel_outfile, xTest, yTest, lk_col, labelsFrame, with.labels, regPred, classPred, saveModel, lvlScale){
 # Get RMSE from all .RData files
 
 filesRData <- list.files(pattern = "_default_.*.RData")
@@ -9,7 +9,7 @@ rawMeasure <- list()
 impCalcRes <- list()
 modelRes <- list()
 labelsDF <- as.data.frame(labelsFrame[1:(ncol(xTest)),])
-
+#lvlScale <- lvlScale
 
 
 # Dummy
@@ -153,7 +153,6 @@ tempDF[is.na(tempDF)]<-0
 # Get absolute values of variable importance
 tempDF <- abs(tempDF)
 
-
 if(with.labels==FALSE){
 
 # Delete V char from rownames
@@ -171,10 +170,28 @@ tempDF <- as.data.frame(tempDF[rownames(labelsDF),])
 
 }
 
-# Scale results from 0 to 100
-tempDF.RMSE<-(tempDF/sum(tempDF[,1]))*100*impCalcScaleRMSE[,i]
-tempDF.MSE<-(tempDF/sum(tempDF[,1]))*100*impCalcScaleMSE[,i]
 
+# Introduce scaling by the number of inputs 
+# Multiply importance by the number of non-zero inputs divided by the number of inputs
+if(lvlScale==TRUE){
+
+  inputs.no <- ncol(xTest)
+  cat("Inputs no: ", inputs.no,"\n")
+  non.zero.inputs <- colSums(tempDF != 0)
+
+  
+# Scale results from 0 to 100, additional scale -> non.zero.inputs/inputs.no
+  tempDF.RMSE<-(tempDF/sum(tempDF[,1]))*100*impCalcScaleRMSE[[i]]*(non.zero.inputs/inputs.no)
+  tempDF.MSE<-(tempDF/sum(tempDF[,1]))*100*impCalcScaleMSE[[i]]*(non.zero.inputs/inputs.no)
+  
+  
+} else if(lvlScale==FALSE){
+  
+  # Scale results from 0 to 100
+  tempDF.RMSE<-(tempDF/sum(tempDF[,1]))*100*impCalcScaleRMSE[[i]]
+  tempDF.MSE<-(tempDF/sum(tempDF[,1]))*100*impCalcScaleMSE[[i]]
+  
+}
 
 cols=i
 rows=1
@@ -187,6 +204,11 @@ rows=1
 for(rows in 1:nrow(tempDF.MSE)){
 matrycaVarImp.MSE[rows,cols]<-tempDF.MSE[rows,]
 }
+
+cat("\n","matrycaVarImp.RMSE after","\n")
+print(matrycaVarImp.RMSE)
+cat("\n")
+
 
 }
 

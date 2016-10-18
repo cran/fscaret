@@ -11,7 +11,7 @@ fscaret(trainDF, testDF, installReqPckg = FALSE, preprocessData = FALSE,
 	with.labels = TRUE, classPred = FALSE, regPred = TRUE, skel_outfile = NULL,
 	impCalcMet = "RMSE&MSE", myTimeLimit = 24 * 60 * 60, Used.funcRegPred = NULL,
 	Used.funcClassPred = NULL, no.cores = NULL, method = "boot", returnResamp = "all",
-	missData=NULL, supress.output=FALSE, saveModel=FALSE, ...)
+	missData=NULL, supress.output=FALSE, saveModel=FALSE, lvlScale=FALSE, ...)
 }
 \arguments{
   \item{trainDF}{
@@ -67,6 +67,9 @@ If TRUE output of modeling phase by caret functions are supressed. Only info whi
 }
 \item{saveModel}{
 Logical value [TRUE/FALSE] if trained model should be embedded in final model.
+}
+\item{lvlScale}{
+Logical value [TRUE/FALSE] if additional scaling should be applied. For more information plase refer to impCalc().
 }
   \item{\dots}{
 Additional arguments, preferably passed to fitControl of caret package

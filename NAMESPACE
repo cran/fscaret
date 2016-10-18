@@ -1,5 +1,8 @@
 exportPattern("^[[:alpha:]]+")
 import(parallel, gsubfn, caret, hmeasure)
+importFrom("stats", "cor", "predict")
+importFrom("utils", "data", "install.packages", "installed.packages",
+     "read.csv", "write.table")
 export(classVarImp,
 	dataPreprocess,
 	fscaret,

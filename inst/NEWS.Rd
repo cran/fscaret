@@ -2,6 +2,19 @@
 \title{News for Package \pkg{fscaret}}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
+
+\section{Changes in version 0.9.4.1}{
+\itemize{
+
+\item Added scaling option. Please see manual of impCalc() for additional information.
+\item Updated imports.
+
+}
+
+}
+
+
+
 \section{Changes in version 0.9.4}{
 \itemize{
 

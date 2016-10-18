@@ -10,7 +10,7 @@ user has trained models from caret package stored in RData files.
 }
 \usage{
 impCalc(skel_outfile, xTest, yTest, lk_col, 
-          labelsFrame,with.labels,regPred,classPred,saveModel)
+          labelsFrame,with.labels,regPred,classPred,saveModel,lvlScale)
 }
 \arguments{
   \item{skel_outfile}{
@@ -32,13 +32,16 @@ Labels to sort variable importance
 Pass with.labels argument. It is advised to ALWAYS use labels as in some cases VarImp returns importance in descending values. If you insist turning with.labels FALSE, then make sure data base contains pure data and you read it (read.csv) to data.frame with option header=FALSE. 
 }
 \item{regPred}{
-Indicating if regression predictions are computed. Possible values TRUE/FALSE. If regPred is set TRUE, then classPred should be set FALSE. 
+Indicating if regression predictions are computed. Logical value [TRUE/FALSE]. If regPred is set TRUE, then classPred should be set FALSE. 
 }
 \item{classPred}{
 Indicating if classification predictions are computed. Possible values TRUE/FALSE. If classPred is set TRUE, then regPred should be set FALSE. Please be advised that importance is scaled according to F-measure. 
 }
 \item{saveModel}{
 Logical value [TRUE/FALSE] if trained model should be embedded in final model.
+}
+\item{lvlScale}{
+Indicating if use additional scaling. The option is especially usefull when large number of features are getting NA's or are not included in feature ranking. It levels the scores of the features taking the overall number of features. Default value is FALSE. Logical value [TRUE/FALSE].
 }
 }
 \details{
@@ -77,6 +80,7 @@ with.labels <- TRUE
 redPred <- TRUE
 classPred <- FALSE
 saveModel <- FALSE
+lvlScale <- FALSE
 
 if(mySystem=="windows"){
 no.cores <- 1
@@ -133,7 +137,7 @@ myVarImp <- regVarImp(model, xTrain, yTrain, xTest,
 
 
 myImpCalc <- impCalc(skel_outfile, xTest, yTest,
-              lk_col,labelsFrame,with.labels,redPred,classPred,saveModel)
+              lk_col,labelsFrame,with.labels,redPred,classPred,saveModel,lvlScale)
 
 }
 \keyword{ design }

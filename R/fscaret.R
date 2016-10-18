@@ -4,7 +4,7 @@ fscaret<-function(trainDF, testDF, installReqPckg=FALSE,
 		  impCalcMet="RMSE&MSE", myTimeLimit=24*60*60,
 		  Used.funcRegPred=NULL, Used.funcClassPred=NULL,
 		  no.cores=NULL, method="boot", returnResamp="all",
-		  missData=NULL, supress.output=FALSE, saveModel=FALSE, ... ){
+		  missData=NULL, supress.output=FALSE, saveModel=FALSE, lvlScale=FALSE, ... ){
 
 
 mySystem <- .Platform$OS.type
@@ -16,7 +16,7 @@ methodSet <- method
 returnResampSet <- returnResamp
 fitControl <- trainControl(method = methodSet, returnResamp = returnResampSet, ...)
 no.cores<-no.cores
-
+lvlScale <- lvlScale
 
 # Get working dir
 mywd <- getwd()
@@ -403,7 +403,7 @@ print("You haven't chosen impCalcMet, so no variable importance calculations wer
 
 } else if((!is.null(impCalcMet))&&((impCalcMet=="RMSE")||(impCalcMet=="MSE")||(impCalcMet=="RMSE&MSE"))){
 
-impCalcRES <- impCalc(skel_outfile, xTest, yTest, lk_col,labelsFrame, with.labels, regPred, classPred, saveModel)
+impCalcRES <- impCalc(skel_outfile, xTest, yTest, lk_col,labelsFrame, with.labels, regPred, classPred, saveModel, lvlScale)
 
 }
 
