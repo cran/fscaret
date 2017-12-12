@@ -18,12 +18,6 @@ fitControl <- trainControl(method = methodSet, returnResamp = returnResampSet, .
 no.cores<-no.cores
 lvlScale <- lvlScale
 
-# Get working dir
-mywd <- getwd()
-
-# Set working dir to tempdir
-setwd(tempdir())
-
 # Dummy object
 data(requiredPackages, envir=environment())
 
@@ -465,8 +459,6 @@ if(preprocessData==TRUE){
 }			
 
 }
-# Return to your working dir
-setwd(mywd)
 
 return(fscaretRES)
 

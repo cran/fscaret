@@ -1,8 +1,8 @@
 Package: fscaret
 Type: Package
 Title: Automated Feature Selection from 'caret'
-Version: 0.9.4.1
-Date: 2016-10-05
+Version: 0.9.4.2
+Date: 2017-12-07
 Depends: R (>= 3.1.0), caret, gsubfn, hmeasure, utils, parallel
 Suggests: ada, arm, Boruta, bst, C50, car, caTools, class, Cubist,
         e1071, earth (>= 2.2-3), elasticnet, ellipse, evtree,
@@ -23,9 +23,9 @@ Description: Automated feature selection using variety of models
         provided by 'caret' package.
         This work was funded by Poland-Singapore bilateral cooperation
         project no 2/3/POL-SIN/2012.
-Packaged: 2016-10-07 10:57:30 UTC; kuba
+Packaged: 2017-12-07 15:43:37 UTC; kuba
 NeedsCompilation: no
 Repository: CRAN
-Date/Publication: 2016-10-18 23:03:39
+Date/Publication: 2017-12-12 21:51:55 UTC
 Author: Jakub Szlek [aut, cre],
   Aleksander Mendyk [ctb]

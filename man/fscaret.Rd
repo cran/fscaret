@@ -109,39 +109,33 @@ mySystem <- .Platform$OS.type
 
 if(mySystem=="windows"){
 
-myCores <- 2
+myFirstRES <- fscaret(dataset.train, dataset.test, installReqPckg=FALSE,
+                  preprocessData=FALSE, with.labels=TRUE, classPred=FALSE,
+                  regPred=TRUE, skel_outfile=NULL,
+                  impCalcMet="RMSE&MSE", myTimeLimit=4,
+                  Used.funcRegPred=c("lm"), Used.funcClassPred=NULL,
+                  no.cores=1, method="boot", returnResamp="all",
+                  supress.output=TRUE,saveModel=FALSE)
 
 } else {
 
 myCores <- 2
 
-}
-
 myFirstRES <- fscaret(dataset.train, dataset.test, installReqPckg=FALSE,
                   preprocessData=FALSE, with.labels=TRUE, classPred=FALSE,
                   regPred=TRUE, skel_outfile=NULL,
-                  impCalcMet="RMSE&MSE", myTimeLimit=5,
-                  Used.funcRegPred=c("lm","pls","pcr"), Used.funcClassPred=NULL,
+                  impCalcMet="RMSE&MSE", myTimeLimit=4,
+                  Used.funcRegPred=c("lm","ppr"), Used.funcClassPred=NULL,
                   no.cores=myCores, method="boot", returnResamp="all",
                   supress.output=TRUE,saveModel=FALSE)
 
-# Training data set after preprocessing
-myFirstRES$PPTrainDF
-
-# Testing data set after preprocessing
-myFirstRES$PPTestDF
+}
 
 
-# Model predictions                  
-myFirstRES$ModelPred
 
+# Results
+myFirstRES
 
-# Variable importance after scaling according to RMSE and MSE
-myFirstRES$VarImp
-
-
-# Reduced input vector (data set) after preprocessing
-myFirstRES$PPlabels
 }
 
 }

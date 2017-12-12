@@ -20,9 +20,9 @@ cat("Calculating: ", funcClassPred,"\n")
 cat("----------------------------------------\n")
 
 
-outfile<-paste("./",(lk_col-1),"in_default_CLASSControl_", paste(funcClassPred),".RData",sep="")
+outfile<-paste(tempdir(),"/",(lk_col-1),"in_default_CLASSControl_", paste(funcClassPred),".RData",sep="")
 
-outfileImp<-paste("./",(lk_col-1),"in_default_CLASSControl_VarImp_", paste(funcClassPred),".txt",sep="")
+outfileImp<-paste(tempdir(),"/",(lk_col-1),"in_default_CLASSControl_VarImp_", paste(funcClassPred),".txt",sep="")
 
 
 #start feature selection method

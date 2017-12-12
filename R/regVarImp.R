@@ -22,9 +22,9 @@ cat("Calculating: ", funcRegPred,"\n")
 cat("----------------------------------------\n")
 
 
-outfile<-paste("./",(lk_col-1),"in_default_REGControl_", paste(funcRegPred),".RData",sep="")
+outfile<-paste(tempdir(),"/",(lk_col-1),"in_default_REGControl_", paste(funcRegPred),".RData",sep="")
 
-outfileImp<-paste("./",(lk_col-1),"in_default_REGControl_VarImp_", paste(funcRegPred),".txt",sep="")
+outfileImp<-paste(tempdir(),"/",(lk_col-1),"in_default_REGControl_VarImp_", paste(funcRegPred),".txt",sep="")
 
 
 #start feature selection method

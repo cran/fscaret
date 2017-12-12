@@ -163,7 +163,7 @@ matrixTrain <- as.data.frame(matrixTrain)
 Be advised to use \code{header=TRUE} when you have data set with column names as first row and \code{header=FALSE} when there are no column names.\\
 Starting from \pkg{fscaret} version 0.9 setting \code{header} is fixed to \code{TRUE}.\\ 
 The last step is obligatory to introduce data into \pkg{fscaret} functions as it checks if the data presented is in \code{data.frame} format.
-\section{ Function \code{fscaret()}}
+\section{ Function fscaret() }
 \subsection{Settings}
 All the settings are documented in \texttt{Reference manual} of \pkg{fscaret} \url{http://cran.r-project.org/web/packages/fscaret/fscaret.pdf}. Here we will concentrate only
 on a few valuable ones.
@@ -447,11 +447,14 @@ This work was funded by Poland-Singapore bilateral cooperation project no 2/3/PO
 \section{References}
 \begin{enumerate}
 
-\item Szlek J, Paclawski A, Lau R, Jachowicz R, Mendyk A. Heuristic modeling of macromolecule release from PLGA microspheres. International Journal of Nanomedicine. 2013:8(1); 4601 - 4611.
-\href{http://www.dovepress.com/heuristic-modeling-of-macromolecule-release-from-plga-microspheres-peer-reviewed-article-IJN}{link to webpage}
+\item Szlek J, Paclawski A, Lau R, Jachowicz R, Mendyk A. Heuristic modeling of macromolecule release from PLGA microspheres. International Journal of Nanomedicine. 2013:8(1); 4601 - 4611.\href{http://www.dovepress.com/heuristic-modeling-of-macromolecule-release-from-plga-microspheres-peer-reviewed-article-IJN}{link to webpage}
 \item Szlek, J., Paclawski, A., Lau, R., Jachowicz, R., Mendyk, A. Heuristic modeling of macromolecules release from PLGA microspheres. Conference proceedings. Gdansk, May 24-25, 2013.\href{http://www.polgerpharm.gumed.edu.pl/attachment/attachment/20321/AbstractBook_Cover_Corrected.pdf}{Abstract book}
-\item Paclawski A, Szlek J, Lau R, Jachowicz R, Mendyk A. Empirical modeling of the fine particle fraction for carrier-based pulmonary delivery formulations. International Journal of Nanomedicine. 2015:10(1); 801 - 810.
-\href{http://www.dovepress.com/empirical-modeling-of-the-fine-particle-fraction-fornbspcarrier-based--peer-reviewed-article-IJN}{link to webpage}
+\item Paclawski A, Szlek J, Lau R, Jachowicz R, Mendyk A. Empirical modeling of the fine particle fraction for carrier-based pulmonary delivery formulations. International Journal of Nanomedicine. 2015:10(1); 801 - 810.\href{http://www.dovepress.com/empirical-modeling-of-the-fine-particle-fraction-fornbspcarrier-based--peer-reviewed-article-IJN}{link to webpage}
+\item Szlek, J., Paclawski, A., Lau, R., Jachowicz, R., Kazemi, P., Mendyk, A. Empirical search for factors affecting mean particle size of PLGA microspheres containing macromolecular drugs. Computer Methods and Programs in Biomedicine. 2016:134; 137-147.\href{https://doi.org/10.1016/j.cmpb.2016.07.006}{link to webpage}
+\item Eskandarian, S., Bahrami, P., Kazemi, P. A comprehensive data mining approach to estimate the rate of penetration: Application of neural network, rule based models and feature ranking. Journal of Petroleum Science and Engineering. 2017:156; 605 - 615.\href{https://doi.org/10.1016/j.petrol.2017.06.039}{link to webpage}
+\item Manuel Amunategui. Ensemble Feature Selection On Steroids: fscaret Package. At: Data Exploration and Machine Learning, Hands-on. On-line Practical walkthroughs on machine learning, data exploration and finding insight.\href{http://amunategui.github.io/fscaret-Walkthrough/}{On-line resource}
+
+
 
 \end{enumerate}
 

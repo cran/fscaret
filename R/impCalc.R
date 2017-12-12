@@ -1,7 +1,7 @@
 impCalc <- function(skel_outfile, xTest, yTest, lk_col, labelsFrame, with.labels, regPred, classPred, saveModel, lvlScale){
 # Get RMSE from all .RData files
 
-filesRData <- list.files(pattern = "_default_.*.RData")
+filesRData <- list.files(path=tempdir(),pattern = "_default_.*.RData")
 impCalcScaleRMSE <- list()
 impCalcScaleMSE <- list()
 impCalcScaleF <- list()
@@ -33,7 +33,7 @@ print(filesRData)
 
 for (i in 1:length(filesRData)){
 
-load(filesRData[i])
+load(paste(tempdir(),"/",filesRData[i],sep=""))
 
 print("")
 print("Calculating error for model:")
@@ -115,7 +115,7 @@ impCalcScaleMSE <- (impCalcScaleMSE/minMse)^(-1)
 
 # Load list of files with _VarImp_
 
-filesVarImp <- list.files(pattern = "_VarImp_")
+filesVarImp <- list.files(path=tempdir(),pattern = "_VarImp_")
 
 matrycaVarImp.RMSE<-matrix(data=0,nrow=(lk_col-1),ncol=(length(filesVarImp)+3))
 matrycaVarImp.MSE<-matrix(data=0,nrow=(lk_col-1),ncol=(length(filesVarImp)+3))
@@ -130,7 +130,7 @@ for(i in 1:length(filesVarImp)){
 currentFile <- filesVarImp[i]
 
 # read file
-tempDF <- read.csv(filesVarImp[i],header=TRUE,sep="\t", strip.white = TRUE, na.strings = c("NA",""))
+tempDF <- read.csv(paste(tempdir(),"/",filesVarImp[i],sep=""),header=TRUE,sep="\t", strip.white = TRUE, na.strings = c("NA",""))
 
 if(ncol(tempDF) > 1){
 
@@ -307,7 +307,7 @@ print(filesRData)
 
 for (i in 1:length(filesRData)){
 
-load(filesRData[i])
+load(paste(tempdir(),"/",filesRData[i],sep=""))
 
 print("")
 print("Calculating error measure for model:")
@@ -408,7 +408,7 @@ rawMeasure <- as.data.frame(impCalcScaleF)
 
 # Load list of files with _VarImp_
 
-filesVarImp <- list.files(pattern = "_VarImp_")
+filesVarImp <- list.files(path=tempdir(),pattern = "_VarImp_")
 
 matrycaVarImp.F <- matrix(data=0,nrow=(lk_col-1),ncol=(length(filesVarImp)+3))
 
@@ -422,7 +422,7 @@ for(i in 1:length(filesVarImp)){
 currentFile <- filesVarImp[i]
 
 # read file
-tempDF <- read.csv(filesVarImp[i],header=TRUE,sep="\t", strip.white = TRUE, na.strings = c("NA",""))
+tempDF <- read.csv(paste(tempdir(),"/",filesVarImp[i],sep=""),header=TRUE,sep="\t", strip.white = TRUE, na.strings = c("NA",""))
 
 if(ncol(tempDF) > 1){
 

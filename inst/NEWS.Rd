@@ -2,6 +2,16 @@
 \title{News for Package \pkg{fscaret}}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
+\section{Changes in version 0.9.4.2}{
+\itemize{
+
+\item Updated code to remove "WARN" from CRAN checks in R version >= 3.4.4.
+
+
+}
+
+}
+
 
 \section{Changes in version 0.9.4.1}{
 \itemize{

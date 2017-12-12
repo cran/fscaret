@@ -51,16 +51,12 @@ impCalc function lists RData files in working directory assuming there are only 
 Jakub Szlek and Aleksander Mendyk
 }
 \examples{
+
+\dontrun{
 # 
 # Hashed to comply with new CRAN check
 # 
 library(fscaret)
-
-# Read working directory
-myWD <- getwd()
-
-# Set working directory to tmp
-setwd(tempdir())
 
 # Load dataset
 data(dataset.train)
@@ -69,7 +65,7 @@ data(dataset.test)
 # Make objects
 trainDF <- dataset.train
 testDF <- dataset.test
-model <- c("lm","pls","pcr")
+model <- c("lm","Cubist")
 fitControl <- trainControl(method = "boot", returnResamp = "all") 
 myTimeLimit <- 5
 no.cores <- 2
@@ -140,5 +136,8 @@ myImpCalc <- impCalc(skel_outfile, xTest, yTest,
               lk_col,labelsFrame,with.labels,redPred,classPred,saveModel,lvlScale)
 
 }
+
+}
+
 \keyword{ design }
 \keyword{ models }
