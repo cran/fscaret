@@ -2,6 +2,17 @@
 \title{News for Package \pkg{fscaret}}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
+\section{Changes in version 0.9.4.3}{
+\itemize{
+
+\item Windows related bug was fixed, though starting from version 0.9.4.3 parallel implementation is deprecated.
+
+
+}
+
+}
+
+
 \section{Changes in version 0.9.4.2}{
 \itemize{
 

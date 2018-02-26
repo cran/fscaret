@@ -388,7 +388,7 @@ xTest <- data.frame(testMatryca_nr[,-lk_col])
 yTest <- as.vector(testMatryca_nr[,lk_col])
 
 regPredRES <- regVarImp(definedModels, xTrain, yTrain, xTest, fitControl,
-			myTimeLimit, no.cores, lk_col, supress.output, mySystem)
+			myTimeLimit, no.cores, lk_col, supress.output)
 
 			
 if(is.null(impCalcMet)){
@@ -429,7 +429,7 @@ xTest <- data.frame(testMatryca_nr[,-lk_col])
 yTest <- as.factor(testMatryca_nr[,lk_col])
 
 classPredRES <- classVarImp(definedModels, xTrain, yTrain, xTest, fitControl,
-			myTimeLimit, no.cores, lk_col, supress.output, mySystem)
+			myTimeLimit, no.cores, lk_col, supress.output)
 
 			
 if(is.null(impCalcMet)){

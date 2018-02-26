@@ -22,18 +22,40 @@ if((length(filesRData) > 0)&&(regPred==TRUE)){
 filesRDataCols <- gsubfn(".*Control_","",filesRData)
 filesRDataCols <- gsubfn(".RData","",filesRDataCols)
 
+
+if(.Platform$OS.type != "windows"){
+
 varImpRDataOutfileRMSE <- paste("./",skel_outfile, "VarImpRes_RMSE.RData",sep="")
 varImpTxtOutfileRMSE <- paste("./",skel_outfile, "VarImpRes_RMSE.txt",sep="")
 
 varImpRDataOutfileMSE <- paste("./",skel_outfile, "VarImpRes_MSE.RData",sep="")
 varImpTxtOutfileMSE <- paste("./",skel_outfile, "VarImpRes_MSE.txt",sep="")
 
+} else if (.Platform$OS.type == "windows"){
+
+varImpRDataOutfileRMSE <- paste(skel_outfile, "VarImpRes_RMSE.RData",sep="")
+varImpTxtOutfileRMSE <- paste(skel_outfile, "VarImpRes_RMSE.txt",sep="")
+
+varImpRDataOutfileMSE <- paste(skel_outfile, "VarImpRes_MSE.RData",sep="")
+varImpTxtOutfileMSE <- paste(skel_outfile, "VarImpRes_MSE.txt",sep="")
+
+
+}
+
 cat("\n----Processing files:----\n")
 print(filesRData)
 
 for (i in 1:length(filesRData)){
 
+if(.Platform$OS.type != "windows"){
+
 load(paste(tempdir(),"/",filesRData[i],sep=""))
+
+} else {
+
+load(paste(tempdir(),"\\",filesRData[i],sep=""))
+
+}
 
 print("")
 print("Calculating error for model:")
@@ -130,7 +152,17 @@ for(i in 1:length(filesVarImp)){
 currentFile <- filesVarImp[i]
 
 # read file
+if(.Platform$OS.type != "windows"){
+
 tempDF <- read.csv(paste(tempdir(),"/",filesVarImp[i],sep=""),header=TRUE,sep="\t", strip.white = TRUE, na.strings = c("NA",""))
+
+} else if (.Platform$OS.type == "windows"){
+
+tempDF <- read.csv(paste(tempdir(),"\\",filesVarImp[i],sep=""),header=TRUE,sep="\t", strip.white = TRUE, na.strings = c("NA",""))
+
+}
+
+
 
 if(ncol(tempDF) > 1){
 
@@ -307,7 +339,16 @@ print(filesRData)
 
 for (i in 1:length(filesRData)){
 
+
+if(.Platform$OS.type != "windows"){
+
 load(paste(tempdir(),"/",filesRData[i],sep=""))
+
+} else if(.Platform$OS.type == "windows"){
+
+load(paste(tempdir(),"\\",filesRData[i],sep=""))
+
+}
 
 print("")
 print("Calculating error measure for model:")
@@ -421,8 +462,19 @@ for(i in 1:length(filesVarImp)){
 
 currentFile <- filesVarImp[i]
 
+
 # read file
+
+if(.Platform$OS.type != "windows"){
+
 tempDF <- read.csv(paste(tempdir(),"/",filesVarImp[i],sep=""),header=TRUE,sep="\t", strip.white = TRUE, na.strings = c("NA",""))
+
+} else if(.Platform$OS.type == "windows"){
+
+tempDF <- read.csv(paste(tempdir(),"\\",filesVarImp[i],sep=""),header=TRUE,sep="\t", strip.white = TRUE, na.strings = c("NA",""))
+
+}
+
 
 if(ncol(tempDF) > 1){
 

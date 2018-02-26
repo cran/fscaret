@@ -1,4 +1,4 @@
-regVarImp <- function(model, xTrain, yTrain, xTest, fitControl, myTimeLimit, no.cores, lk_col, supress.output, mySystem){
+regVarImp <- function(model, xTrain, yTrain, xTest, fitControl, myTimeLimit, no.cores, lk_col, supress.output){
 
 resultVarImpListCombREG <- NULL
 resultVarImpListCombREG <- list()
@@ -10,7 +10,6 @@ myTimeLimitSet <- myTimeLimit
 fitControlSet <- fitControl
 lk_col <- lk_col
 supress.output <- supress.output
-mySystem <- mySystem
 no.cores <- no.cores
 
 
@@ -21,16 +20,27 @@ cat("----------------------------------------\n")
 cat("Calculating: ", funcRegPred,"\n")
 cat("----------------------------------------\n")
 
+if(.Platform$OS.type != "windows"){
 
 outfile<-paste(tempdir(),"/",(lk_col-1),"in_default_REGControl_", paste(funcRegPred),".RData",sep="")
 
 outfileImp<-paste(tempdir(),"/",(lk_col-1),"in_default_REGControl_VarImp_", paste(funcRegPred),".txt",sep="")
 
+} else if(.Platform$OS.type == "windows") {
+
+outfile<-paste(tempdir(),"\\",(lk_col-1),"in_default_REGControl_", paste(funcRegPred),".RData",sep="")
+
+outfileImp<-paste(tempdir(),"\\",(lk_col-1),"in_default_REGControl_VarImp_", paste(funcRegPred),".txt",sep="")
+
+}
+
+# print(outfile)
+# print(outfileImp)
 
 #start feature selection method
 timer1 <- proc.time()
 
-if(mySystem!="windows"){
+if(.Platform$OS.type !="windows"){
   if(supress.output==TRUE){
 
     # Supress output
@@ -43,7 +53,7 @@ if(mySystem!="windows"){
       res <- invisible(try(timeout(train(xTrain,yTrain, method=funcRegPred, trControl=fitControlSet),seconds=myTimeLimitSet),silent=TRUE))
     }
     
-} else {
+} else if (.Platform$OS.type == "windows"){
 
     if(supress.output==TRUE){
 
@@ -75,9 +85,9 @@ resultVarImpListCombREG[funcRegPred] <- try(list(variableImportanceRes),silent=T
 if((class(res) != "try-error")&&(class(variableImportanceRes) != "try-error")){
 
 # save results
-try(save(res, file=outfile),silent=TRUE)
+save(res, file=outfile)
 
-try(write.table(variableImportanceRes, col.names=TRUE, row.names=TRUE, quote=FALSE, sep="\t", file=outfileImp),silent=TRUE)
+write.table(variableImportanceRes, col.names=TRUE, row.names=TRUE, quote=FALSE, sep="\t", file=outfileImp)
 
   } else if(class(res) != "try-error"){
 
@@ -217,27 +227,28 @@ try(write.table(variableImportanceRes, col.names=TRUE, row.names=TRUE, quote=FAL
 
 # resultVarImpListCombREG[model] <- mclapply(model,regVarPred, mc.preschedule=TRUE, mc.cores=no.cores, mc.set.seed=TRUE, mc.cleanup=TRUE, mc.allow.recursive=TRUE)
 
-if (Sys.info()[1] == "Windows"){
+if (.Platform$OS.type == "windows"){
 
 # Windows parallel implementation
+# require(snow)
 
 # Spawn child processes using fork()
-cl <- makeCluster(no.cores)
-
-# Export objects to the cluster
-clusterExport(
-              cl=cl, 
-              varlist=c("myTimeLimitSet", "fitControlSet", "lk_col", "supress.output",
-                        "mySystem", "no.cores", "xTrain","yTrain", "funcRegPred", "fitControlSet")
-              ,envir=environment())
+# cl <- makeCluster(no.cores, type="SOCK")
 
 # Run function
-resultVarImpListCombREG[model] <- parLapply(cl, model, regVarPred)
+# resultVarImpListCombREG[model] <- parLapply(cl, model, regVarPred)
 
 # Stop cluster and kill child processes
-stopCluster(cl)
+# stopCluster(cl)
 
-} else {
+resultVarImpListCombREG[model] <- lapply(model,regVarPred)
+
+
+
+
+
+
+} else if (.Platform$OS.type != "windows"){
   
 # POSIX OS parallel implementation  
   resultVarImpListCombREG[model] <- mclapply(model,regVarPred,

@@ -1,5 +1,5 @@
 
-classVarImp <- function(model, xTrain, yTrain, xTest, fitControl, myTimeLimit, no.cores, lk_col, supress.output, mySystem){
+classVarImp <- function(model, xTrain, yTrain, xTest, fitControl, myTimeLimit, no.cores, lk_col, supress.output){
 
 resultVarImpListCombCLASS <- NULL
 resultVarImpListCombCLASS <- list()
@@ -19,16 +19,26 @@ cat("----------------------------------------\n")
 cat("Calculating: ", funcClassPred,"\n")
 cat("----------------------------------------\n")
 
+if(.Platform$OS.type != "windows"){
+
 
 outfile<-paste(tempdir(),"/",(lk_col-1),"in_default_CLASSControl_", paste(funcClassPred),".RData",sep="")
 
 outfileImp<-paste(tempdir(),"/",(lk_col-1),"in_default_CLASSControl_VarImp_", paste(funcClassPred),".txt",sep="")
 
+} else if(.Platform$OS.type == "windows") {
+
+outfile<-paste(tempdir(),"\\",(lk_col-1),"in_default_CLASSControl_", paste(funcClassPred),".RData",sep="")
+
+outfileImp<-paste(tempdir(),"\\",(lk_col-1),"in_default_CLASSControl_VarImp_", paste(funcClassPred),".txt",sep="")
+
+}
+
 
 #start feature selection method
 timer1 <- proc.time()
 
-if(mySystem!="windows"){
+if(.Platform$OS.type !="windows"){
   if(supress.output==TRUE){
 
     # Supress output
@@ -212,25 +222,28 @@ tmpSum <- sum(variableImportanceRes$importance[,1])
   
 }  
 
-if (Sys.info()[1] == "Windows"){
+if (.Platform$OS.type == "windows"){
   
-  # Windows parallel implementation
-  
-  # Spawn child processes using fork()
-  cl <- makeCluster(no.cores)
-  
-  # Export objects to the cluster
-  clusterExport(
-    cl=cl, 
-    varlist=c("myTimeLimitSet", "fitControlSet", "lk_col", "supress.output",
-              "mySystem", "no.cores", "xTrain","yTrain", "funcClassPred", "fitControlSet")
-    ,envir=environment())
-  
-  # Run function
-  resultVarImpListCombCLASS[model] <- parLapply(cl, model, classVarPred)
-  
-  # Stop cluster and kill child processes
-  stopCluster(cl)
+#   # Windows parallel implementation
+#   
+#   # Spawn child processes using fork()
+#   cl <- makeCluster(no.cores)
+#   
+#   # Export objects to the cluster
+#   clusterExport(
+#     cl=cl, 
+#     varlist=c("myTimeLimitSet", "fitControlSet", "lk_col", "supress.output",
+#               "mySystem", "no.cores", "xTrain","yTrain", "funcClassPred", "fitControlSet")
+#     ,envir=environment())
+#   
+#   # Run function
+#   resultVarImpListCombCLASS[model] <- parLapply(cl, model, classVarPred)
+#   
+#   # Stop cluster and kill child processes
+#   stopCluster(cl)
+
+resultVarImpListCombCLASS[model] <- lapply(model,classVarPred)
+
   
 } else {
   

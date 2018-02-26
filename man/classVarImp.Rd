@@ -9,7 +9,7 @@ The function uses the caret package advantage to perform fitting of numerous cla
 \usage{
 classVarImp(model, xTrain, yTrain, xTest,
 	  fitControl, myTimeLimit, no.cores,
-	  lk_col, supress.output, mySystem)
+	  lk_col, supress.output)
 }
 \arguments{
   \item{model}{
@@ -38,9 +38,6 @@ Number of columns for whole data set (inputs + output)
 }
   \item{supress.output}{
 If TRUE output of models are supressed.
-}
-  \item{mySystem}{
-Called from fscaret() result of function .Platform$OS.type
 }
 }
 \references{
