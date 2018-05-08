@@ -2,6 +2,19 @@
 \title{News for Package \pkg{fscaret}}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
+
+\section{Changes in version 0.9.4.4}{
+\itemize{
+
+\item Get rid of vectorized conditions in if() statements, this fix was suggested by Kurt Hornik.
+\item A bug in importance calculation summary was fixed. A bug description: showing NA values of SUM when one of the models yielded NA values.
+
+
+}
+
+}
+
+
 \section{Changes in version 0.9.4.3}{
 \itemize{
 

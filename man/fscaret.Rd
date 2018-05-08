@@ -105,9 +105,7 @@ data(dataset.test)
 
 requiredPackages <- c("R.utils", "gsubfn", "ipred", "caret", "parallel", "MASS")
 
-mySystem <- .Platform$OS.type
-
-if(mySystem=="windows"){
+if(.Platform$OS.type=="windows"){
 
 myFirstRES <- fscaret(dataset.train, dataset.test, installReqPckg=FALSE,
                   preprocessData=FALSE, with.labels=TRUE, classPred=FALSE,

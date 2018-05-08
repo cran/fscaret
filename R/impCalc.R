@@ -154,11 +154,11 @@ currentFile <- filesVarImp[i]
 # read file
 if(.Platform$OS.type != "windows"){
 
-tempDF <- read.csv(paste(tempdir(),"/",filesVarImp[i],sep=""),header=TRUE,sep="\t", strip.white = TRUE, na.strings = c("NA",""))
+tempDF <- read.csv(paste(tempdir(),"/",filesVarImp[i],sep=""),header=TRUE,sep="\t", strip.white = TRUE, na.strings = c("NA",""),quote="")
 
 } else if (.Platform$OS.type == "windows"){
 
-tempDF <- read.csv(paste(tempdir(),"\\",filesVarImp[i],sep=""),header=TRUE,sep="\t", strip.white = TRUE, na.strings = c("NA",""))
+tempDF <- read.csv(paste(tempdir(),"\\",filesVarImp[i],sep=""),header=TRUE,sep="\t", strip.white = TRUE, na.strings = c("NA",""),quote="")
 
 }
 
@@ -166,7 +166,7 @@ tempDF <- read.csv(paste(tempdir(),"\\",filesVarImp[i],sep=""),header=TRUE,sep="
 
 if(ncol(tempDF) > 1){
 
-tempDF <- as.data.frame(rowSums(tempDF))
+tempDF <- as.data.frame(rowSums(tempDF,na.rm=TRUE))
 colnames(tempDF) <- "Overall"
 
 }
@@ -224,6 +224,11 @@ if(lvlScale==TRUE){
   tempDF.MSE<-(tempDF/sum(tempDF[,1]))*100*impCalcScaleMSE[[i]]
   
 }
+
+# Check for NAs after division by sum
+tempDF.RMSE[is.na(tempDF.RMSE)]<-0
+tempDF.MSE[is.na(tempDF.MSE)]<-0
+
 
 cols=i
 rows=1
@@ -467,18 +472,18 @@ currentFile <- filesVarImp[i]
 
 if(.Platform$OS.type != "windows"){
 
-tempDF <- read.csv(paste(tempdir(),"/",filesVarImp[i],sep=""),header=TRUE,sep="\t", strip.white = TRUE, na.strings = c("NA",""))
+tempDF <- read.csv(paste(tempdir(),"/",filesVarImp[i],sep=""),header=TRUE,sep="\t", strip.white = TRUE, na.strings = c("NA",""),quote="")
 
 } else if(.Platform$OS.type == "windows"){
 
-tempDF <- read.csv(paste(tempdir(),"\\",filesVarImp[i],sep=""),header=TRUE,sep="\t", strip.white = TRUE, na.strings = c("NA",""))
+tempDF <- read.csv(paste(tempdir(),"\\",filesVarImp[i],sep=""),header=TRUE,sep="\t", strip.white = TRUE, na.strings = c("NA",""),quote="")
 
 }
 
 
 if(ncol(tempDF) > 1){
 
-tempDF <- as.data.frame(rowSums(tempDF))
+tempDF <- as.data.frame(rowSums(tempDF,na.rm=TRUE))
 colnames(tempDF) <- "Overall"
 
 }
@@ -494,6 +499,7 @@ tempDF[,1] <- as.numeric(tempDF[,1])
 
 # Check if there are any NA values and zero them before summing
 tempDF[is.na(tempDF)]<-0
+
 # Get absolute values of variable importance
 tempDF <- abs(tempDF)
 
@@ -518,6 +524,9 @@ tempDF[is.na(tempDF)]<-0
 
 # Scale results from 0 to 100
 tempDF.F<-(tempDF/sum(tempDF[,1]))*100*impCalcScaleF[,i]
+
+# Check for NAs after division by sum
+tempDF.F[is.na(tempDF.F)]<-0
 
 cols=i
 rows=1

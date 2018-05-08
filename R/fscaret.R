@@ -78,6 +78,18 @@ cat("\n----Please check the result of: is.data.frame(yourData) function ----\n")
 # Set local settings back to "normal", because loading RWeka changes locale settings
 Sys.setlocale(category = "LC_NUMERIC", locale = "C")
 
+
+# 
+# switch(Used.funcRegPred=="all",
+#     Used.funcRegPredAll <- TRUE
+# )
+# 
+# switch(Used.funcClassPred=="all",
+#     Used.funcClassPredAll <- TRUE
+# )
+
+
+
 # Set models data set to use in funcRegPred
 if(regPred==TRUE){
 
@@ -85,11 +97,15 @@ if(is.null(Used.funcRegPred)){
 
 definedModels <- c("rf")
 
-} else if(Used.funcRegPred=="all"){
-
-definedModels <- funcRegPred
-
-} else {
+} else if(length(Used.funcRegPred)==1){
+    
+    if(Used.funcRegPred=="all"){
+        definedModels <- funcRegPred
+    } else {
+         definedModels <- Used.funcRegPred
+        }
+    
+} else if(length(Used.funcRegPred)>1){
 
 definedModels <- Used.funcRegPred
 
@@ -108,13 +124,17 @@ if(is.null(Used.funcClassPred)){
 
 definedModels <- c("rf")
 
-} else if(Used.funcClassPred=="all"){
+} else if(length(Used.funcClassPred)==1){
+        
+        if(Used.funcClassPred=="all"){
+            definedModels <- funcClassPred
+        } else {
+            definedModels <- Used.funcClassPred
+        }
+        
+} else if(length(Used.funcClassPred)>1){
 
-definedModels <- funcClassPred
-
-} else {
-
-definedModels <- Used.funcClassPred
+    definedModels <- Used.funcClassPred
 
 }
 
